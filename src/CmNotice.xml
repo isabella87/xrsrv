@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../lib/statements.xsd">
+	<module description="cm_notice  module" name="cm_notice">
+	 <entity description="all_notice_info table" name="all_notice_info">
+	        <field name="cn_id" type="int" />
+		    <field name="type" type="int" />
+		    <field name="title"  type="string" />
+		    <field name="key_str"  type="string" />
+		    <field name="status" type="int" />
+		    <field name="recommend"  type="int" />
+		    <field name="abstract_content"  type="string" />
+		    <field name="priority"  type="int" />
+		    <field name="creator"  type="string" />
+		    <field name="create_time"  type="datetime" />
+		    <field name="updater"  type="string" />
+		    <field name="update_time"  type="datetime" />
+		    <field name="top_time" type="datetime" />
+		    <field name="submit_time" type="datetime" />
+		    <field name="publish_time" type="datetime" />
+		    <field name="revoke_time" type="datetime" />
+		    <field name="revoke_user_name" type="string" />
+		    <field name="publisher" type="string" />
+		    <field name="submitter" type="string" />
+	     </entity>
+	     
+	     <entity description="all_notice_info_detail table" name="all_notice_info_detail">
+	        <field name="cn_id" type="int" />
+		    <field name="type" type="int" />
+		    <field name="title"  type="string" />
+		    <field name="key_str"  type="string" />
+		    <field name="content"  type="string" />
+		    <field name="status" type="int" />
+		    <field name="recommend"  type="int" />
+		    <field name="abstract_content"  type="string" />
+		    <field name="priority"  type="int" />
+		    <field name="creator"  type="string" />
+		    <field name="create_time"  type="datetime" />
+		    <field name="updater"  type="string" />
+		    <field name="update_time"  type="datetime" />
+		    <field name="top_time" type="datetime" />
+		    <field name="submit_time" type="datetime" />
+		    <field name="publish_time" type="datetime" />
+		    <field name="revoke_time" type="datetime" />
+		    <field name="revoke_user_name" type="string" />
+		    <field name="publisher" type="string" />
+		    <field name="submitter" type="string" />
+	     </entity>
+	     
+		<entity description="notice_info table" name="notice_info">
+			<field name="cn_id" type="int" />
+		    <field name="type" type="int" />
+		    <field name="title"  type="string" />
+		    <field name="key_str"  type="string" />
+		    <field name="status" type="int" />
+		    <field name="recommend"  type="int" />
+		    <field name="abstract_content"  type="string" />
+		    <field name="priority"  type="int" />
+		    <field name="creator"  type="string" />
+		    <field name="create_time"  type="datetime" />
+		    <field name="updater"  type="string" />
+		    <field name="update_time"  type="datetime" />
+		</entity>
+		
+		<entity description="notice_info table" name="notice_info_detail">
+			<field name="cn_id" type="int" />
+		    <field name="type" type="int" />
+		    <field name="title"  type="string" />
+		    <field name="key_str"  type="string" />
+		    <field name="content"  type="string" />
+		    <field name="status" type="int" />
+		    <field name="recommend"  type="int" />
+		    <field name="abstract_content"  type="string" />
+		    <field name="priority"  type="int" />
+		    <field name="creator"  type="string" />
+		    <field name="create_time"  type="datetime" />
+		    <field name="updater"  type="string" />
+		    <field name="update_time"  type="datetime" />
+		</entity>
+		
+		<statement name="create_Notice" resultType="updated-count" autoKey="cn_id">
+			<![CDATA[INSERT INTO CM_NOTICE (TYPE, TITLE, 
+		             KEY_STR, CONTENT, STATUS, 
+		             RECOMMEND, ABSTRACT_CONTENT,
+		             CREATOR, CREATE_TIME)
+		             VALUES ( #type#, #title#, 
+		             #key_str#, #content#, #status#, 
+		             #recommend#, #abstract_content#,
+		             #creator#, SYSDATE())]]>
+		    <parameter name="type" type="int" />
+		    <parameter name="title"  type="string" />
+		    <parameter name="key_str"  type="string" />
+		    <parameter name="content"  type="string" />
+		    <parameter name="status" type="int" />
+		    <parameter name="recommend"  type="int" />
+		    <parameter name="abstract_content"  type="string" />
+		    <parameter name="creator"  type="string" />
+		</statement>
+		
+		<statement name="update_Notice" resultType="updated-count">
+			<![CDATA[UPDATE CM_NOTICE
+	                 SET TYPE = #type#,
+	                 TITLE = #title#,
+	                 KEY_STR = #key_str#,
+	                 CONTENT = #content#,
+	                 RECOMMEND = #recommend#,
+	                 ABSTRACT_CONTENT = #abstract_content#,
+	                 UPDATER = #updater#,
+	                 UPDATE_TIME = SYSDATE()
+	                 WHERE CN_ID = #cn_id# AND STATUS = 0]]>
+			<parameter name="cn_id" type="int" />
+		    <parameter name="type" type="int" />
+		    <parameter name="title"  type="string" />
+		    <parameter name="key_str"  type="string" />
+		    <parameter name="content"  type="string" />
+		    <parameter name="recommend"  type="int" />
+		    <parameter name="abstract_content"  type="string" />
+		    <parameter name="updater"  type="string" />
+		</statement>
+		
+		<statement name="query_Notice_Info_Detail" resultType="entity" entityName="notice_info_detail">
+			<![CDATA[SELECT CN_ID, TYPE, TITLE, KEY_STR, CONTENT, STATUS, RECOMMEND, ABSTRACT_CONTENT, PRIORITY, 
+   			 	     CREATOR, CREATE_TIME, UPDATER, UPDATE_TIME
+		             FROM CM_NOTICE
+		             WHERE CN_ID = #cn_id#]]>
+			<parameter name="cn_id" type="int" />
+		</statement>
+		
+		<statement name="query_Notice_Info_Detail_by_type" resultType="entity" entityName="notice_info_detail">
+			<![CDATA[SELECT CN_ID, TYPE, TITLE, KEY_STR, CONTENT, STATUS, RECOMMEND, ABSTRACT_CONTENT, PRIORITY, 
+   			 	     CREATOR, CREATE_TIME, UPDATER, UPDATE_TIME
+		             FROM CM_NOTICE
+		             WHERE CN_ID = #cn_id# AND TYPE = #type#]]>
+			<parameter name="cn_id" type="int" />
+			<parameter name="type" type="int"/>
+		</statement>
+		
+		<statement name="query_Notice_Info" resultType="entities" entityName="notice_info">
+			<![CDATA[SELECT CN_ID, TYPE, TITLE, KEY_STR, STATUS, RECOMMEND, ABSTRACT_CONTENT, PRIORITY, 
+   			 	     CREATOR, CREATE_TIME, UPDATER, UPDATE_TIME
+		             FROM CM_NOTICE]]>
+			<dynamic prepend="WHERE">
+				<isNotEmpty parameter="start_time">
+			<![CDATA[CREATE_TIME >= #start_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="end_time">
+			<![CDATA[CREATE_TIME <= #end_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="type">
+			<![CDATA[TYPE= #type#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="status">
+			<![CDATA[STATUS= #status#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="search_key">
+			<![CDATA[CONTENT like #search_key#]]>
+				</isNotEmpty>
+			</dynamic>
+			<![CDATA[ORDER BY  PRIORITY ASC, TOP_TIME DESC, CREATE_TIME DESC]]>
+			<parameter name="start_time" type="start-date" />
+			<parameter name="end_time" type="end-date"/>
+			<parameter name="type" type="int"/>
+			<parameter name="status" type="int"/>
+			<parameter name="search_key" type="string" match="contains" />
+		</statement>
+		
+		<statement name="query_Notice_Info_count" resultType="int">
+			<![CDATA[SELECT COUNT(CN_ID) FROM CM_NOTICE]]>
+			<dynamic prepend="WHERE">
+				<isNotEmpty parameter="start_time">
+			<![CDATA[CREATE_TIME >= #start_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="end_time">
+			<![CDATA[CREATE_TIME <= #end_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="type">
+			<![CDATA[TYPE= #type#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="status">
+			<![CDATA[STATUS= #status#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="search_key">
+			<![CDATA[CONTENT like #search_key#]]>
+				</isNotEmpty>
+			</dynamic>
+
+			<parameter name="start_time" type="start-date" />
+			<parameter name="end_time" type="end-date"/>
+			<parameter name="type" type="int"/>
+			<parameter name="status" type="int"/>
+			<parameter name="search_key" type="string" match="contains" />
+		</statement>
+		
+		<statement name="query_stratage_info" resultType="entities" entityName="notice_info">
+			<![CDATA[SELECT CN_ID, TYPE, TITLE, KEY_STR, STATUS, RECOMMEND, ABSTRACT_CONTENT, PRIORITY, 
+   			 	     CREATOR, CREATE_TIME, UPDATER, UPDATE_TIME
+		             FROM CM_NOTICE   
+		             WHERE TYPE IN (5,13,6,7,8,9,11,10) 
+		             ORDER BY PRIORITY ASC,TOP_TIME DESC,CREATE_TIME DESC]]>
+		</statement>
+		
+		<statement name="set_top" resultType="uc">
+			<![CDATA[UPDATE CM_NOTICE 
+			         SET TOP_TIME=SYSDATE()
+   				     WHERE CN_ID = #cn_id#]]>
+			<parameter name="cn_id" type="int" />
+		</statement>
+		
+		<statement name="revoke_top" resultType="uc">
+			<![CDATA[UPDATE CM_NOTICE 
+			         SET TOP_TIME=NULL
+   				     WHERE CN_ID = #cn_id#]]>
+			<parameter name="cn_id" type="int" />
+		</statement>
+		
+		<statement name="delete_notice_Info" resultType="uc">
+			<![CDATA[DELETE FROM CM_NOTICE
+   				     WHERE CN_ID = #cn_id# AND STATUS=0]]>
+			 <parameter name="cn_id" type="int" />
+		</statement>
+		
+		<statement name="submit_notice" resultType="uc">
+			<![CDATA[UPDATE CM_NOTICE 
+			         SET STATUS=1, 
+			         SUBMIT_TIME=SYSDATE(), 
+			         SUBMITTER = #username#
+   				     WHERE CN_ID = #cn_id# AND STATUS=0]]>
+			<parameter name="cn_id" type="int" />
+			<parameter name="username" type="string" />
+		</statement>
+		
+		<statement name="return_notice" resultType="uc">
+			<![CDATA[UPDATE CM_NOTICE 
+			         SET STATUS=0
+   				     WHERE CN_ID = #cn_id# AND (STATUS=1 OR STATUS = 2)]]>
+			<parameter name="cn_id" type="int" />
+		</statement>
+		
+		<statement name="publish_notice" resultType="uc">
+			<![CDATA[UPDATE CM_NOTICE 
+			         SET STATUS=2, 
+			         PUBLISH_TIME=SYSDATE(), 
+			         PUBLISHER = #username#
+   				     WHERE CN_ID = #cn_id# AND STATUS=1]]>
+			<parameter name="cn_id" type="int" />
+			<parameter name="username" type="string" />
+		</statement>
+		
+		<statement name="revoke_notice" resultType="uc">
+			<![CDATA[UPDATE CM_NOTICE 
+			         SET STATUS=3, 
+			         REVOKE_TIME=SYSDATE(), 
+			         REVOKE_USER_NAME = #username#
+   				     WHERE CN_ID = #cn_id# AND STATUS=2]]>
+			<parameter name="cn_id" type="int" />
+			<parameter name="username" type="string" />
+		</statement>
+		
+		<statement name="query_all_notice_info_detail" resultType="entity" entityName="all_notice_info_detail">
+			<![CDATA[SELECT CN_ID, TYPE, TITLE, KEY_STR, CONTENT, STATUS, RECOMMEND, ABSTRACT_CONTENT, PRIORITY, 
+   			 	     CREATOR, CREATE_TIME, UPDATER, UPDATE_TIME, TOP_TIME, SUBMIT_TIME, PUBLISH_TIME,
+   			 	     REVOKE_TIME, REVOKE_USER_NAME, PUBLISHER, SUBMITTER
+		             FROM CM_NOTICE
+		             WHERE CN_ID = #cn_id#]]>
+			<parameter name="cn_id" type="int" />
+		</statement>
+		
+		<statement name="query_all_notice_info" resultType="entities" entityName="all_notice_info">
+			<![CDATA[SELECT CN_ID, TYPE, TITLE, KEY_STR, STATUS, RECOMMEND, ABSTRACT_CONTENT, PRIORITY, 
+   			 	     CREATOR, CREATE_TIME, UPDATER, UPDATE_TIME, TOP_TIME, SUBMIT_TIME, PUBLISH_TIME,
+   			 	     REVOKE_TIME, REVOKE_USER_NAME, PUBLISHER, SUBMITTER
+		             FROM CM_NOTICE]]>
+			<dynamic prepend="WHERE">
+				<isNotEmpty parameter="start_time">
+			        <![CDATA[CREATE_TIME >= #start_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="end_time">
+			        <![CDATA[CREATE_TIME <= #end_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="type">
+			        <![CDATA[TYPE= #type#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="search_key">
+			         <![CDATA[(CONTENT LIKE #search_key# OR TITLE LIKE #search_key#)]]>
+				</isNotEmpty>
+			</dynamic>
+			<![CDATA[ORDER BY CREATE_TIME DESC]]>
+			<parameter name="start_time" type="start-date" />
+			<parameter name="end_time" type="end-date"/>
+			<parameter name="type" type="int"/>
+			<parameter name="search_key" type="string" match="contains" />
+		</statement>
+	</module>
+</root>

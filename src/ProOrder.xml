@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../lib/statements.xsd">
+	<module description="pro_order_ module" name="pro_order">
+       <entity description="pro_order_info table" name="pro_order_info">
+			<field name="po_id" type="int" />
+			<field name="mp_id" type="int" />
+			<field name="au_id" type="int" />
+			<field name="order_no" type="string" />
+			<field name="price" type="decimal" />
+			<field name="despatch_fee" type="decimal" />
+			<field name="status" type="int" />
+            <field name="remark" type="string" />
+            <field name="pay_type" type="int" />
+			<field name="creator" type="string" />	
+            <field name="create_time" type="datetime" />
+            <field name="updator" type="string" />
+            <field name="update_time" type="datetime" />
+		</entity>
+		
+		<entity description="pro_order_info table" name="pro_order_info_not_con_id">
+			<field name="mp_id" type="int" />
+			<field name="au_id" type="int" />
+			<field name="order_no" type="string" />
+			<field name="price" type="decimal" />
+			<field name="despatch_fee" type="decimal" />
+			<field name="status" type="int" />
+            <field name="remark" type="string" />
+            <field name="pay_type" type="int" />
+			<field name="creator" type="string" />	
+            <field name="create_time" type="datetime" />
+            <field name="updator" type="string" />
+            <field name="update_time" type="datetime" />
+		</entity>
+		
+		
+		<entity description="pro_order_detail_info table" name="pro_order_detail_info">
+			<field name="po_id" type="int" />
+			<field name="mp_id" type="int" />
+			<field name="au_id" type="int" />
+			<field name="real_name" type="string" />
+			<field name="mobile" type="string" />
+			<field name="pro_name" type="string" />
+			<field name="pro_no" type="string" />
+			<field name="order_no" type="string" />
+			<field name="price" type="decimal" />
+			<field name="despatch_fee" type="decimal" />
+			<field name="status" type="int" />
+            <field name="remark" type="string" />
+            <field name="pay_type" type="int" />
+			<field name="creator" type="string" />	
+            <field name="create_time" type="datetime" />
+            <field name="updator" type="string" />
+            <field name="update_time" type="datetime" />
+		</entity>
+		
+		<statement name="create_pro_order_by_mp_id" resultType="uc">
+			<![CDATA[INSERT INTO PRO_ORDER(MP_ID,AU_ID,ORDER_NO,PRICE,DESPATCH_FEE,STATUS,REMARK,PAY_TYPE,CREATOR,CREATE_TIME)
+						SELECT MP_ID,#au_id#,#order_no#,PRICE,#despatch_fee#,1,#remark#,#pay_type#,#creator#,#create_time# 
+						FROM MAJOR_PRODUCT 
+						WHERE MP_ID =#mp_id#
+			]]>
+			<parameter name="mp_id" type="int" />
+			<parameter name="au_id" type="int" />
+			<parameter name="order_no" type="string" />
+			<parameter name="despatch_fee" type="decimal" />
+            <parameter name="remark" type="string" />
+            <parameter name="pay_type" type="int" />
+			<parameter name="creator" type="string" />	
+            <parameter name="create_time" type="datetime" />
+		</statement>
+		
+		<statement name="create_pro_order_info" resultType="uc" autoKey="po_id">
+			<![CDATA[INSERT INTO PRO_ORDER({pro_order_info_not_con_id})
+				     VALUES(#mp_id#, #au_id#, #price#, #despatch_fee#, #status#, #remark#, #pay_type#, #creator#, #create_time#, #updator#, #update_time#)
+			]]>
+			<parameter name="mp_id" type="int" />
+			<parameter name="au_id" type="int" />
+			<parameter name="price" type="decimal" />
+			<parameter name="despatch_fee" type="decimal" />
+			<parameter name="status" type="int" />
+            <parameter name="remark" type="string" />
+            <parameter name="pay_type" type="int" />
+			<parameter name="creator" type="string" />	
+            <parameter name="create_time" type="datetime" />
+            <parameter name="updator" type="string" />
+            <parameter name="update_time" type="datetime" />
+		</statement>
+		
+		<statement name="update_pro_order_info" resultType="uc">
+		     <![CDATA[UPDATE PRO_ORDER
+				     SET 
+					     mp_id = #mp_id#, 
+					     au_id = #au_id#, 
+					     price = #price#, 
+					     despatch_fee = #despatch_fee#, 
+					     status = #status#, 
+					     remark = #remark#, 
+					     pay_type = #pay_type#, 
+					     updator = #updator#, 
+					     update_time = #update_time#
+				     WHERE PO_ID = #po_id#
+			 ]]>
+		     <parameter name="po_id" type="int" />
+			<parameter name="mp_id" type="int" />
+			<parameter name="au_id" type="int" />
+			<parameter name="price" type="decimal" />
+			<parameter name="despatch_fee" type="decimal" />
+			<parameter name="status" type="int" />
+            <parameter name="remark" type="string" />
+            <parameter name="pay_type" type="int" />
+            <parameter name="updator" type="string" />
+            <parameter name="update_time" type="datetime" />
+		</statement>
+		
+		<statement name="update_pro_order_info_status" resultType="uc">
+		     <![CDATA[UPDATE PRO_ORDER
+				     SET 
+					     STATUS = #status#, 
+					     UPDATOR = #updator#, 
+					     UPDATE_TIME = #update_time#
+				     WHERE PO_ID = #po_id# AND STATUS = #old_status#
+			 ]]>
+		     <parameter name="po_id" type="int" />
+			<parameter name="status" type="int" />
+			<parameter name="old_status" type="int" />
+            <parameter name="updator" type="string" />
+            <parameter name="update_time" type="datetime" />
+		</statement>
+		
+		<statement name="query_pro_order_info_list" resultType="entities"
+			entityName="pro_order_detail_info">
+			<![CDATA[SELECT PO.PO_ID,PO.MP_ID,PO.AU_ID,API.REAL_NAME,AUR.MOBILE,MP.PRO_NAME,MP.PRO_NO,PO.ORDER_NO,
+						PO.PRICE,PO.DESPATCH_FEE,PO.STATUS,PO.REMARK,PO.PAY_TYPE,PO.CREATOR,PO.CREATE_TIME,
+						PO.UPDATOR,PO.UPDATE_TIME
+				     FROM PRO_ORDER  PO
+				     LEFT JOIN ACC_PERSON_INFO API ON API.AU_ID = PO.AU_ID
+				     LEFT JOIN ACC_USER_REG AUR ON PO.AU_ID = AUR.AU_ID
+				     JOIN MAJOR_PRODUCT MP ON MP.MP_ID = PO.MP_ID
+			]]>
+			<dynamic prepend="WHERE">
+				<isNotEmpty parameter="start_time">
+					<![CDATA[PO.CREATE_TIME >= #start_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="end_time">
+					<![CDATA[PO.CREATE_TIME <= #end_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="au_id">
+					<![CDATA[PO.AU_ID = #au_id#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="status">
+					<![CDATA[PO.STATUS = #status#]]>
+				</isNotEmpty>
+			    <isNotEmpty parameter="pay_type">
+					<![CDATA[PO.PAY_TYPE = #pay_type#]]>
+				</isNotEmpty>
+			</dynamic>
+			<![CDATA[ORDER BY PO.PO_ID DESC]]>
+			<parameter name="start_time" type="datetime" />
+			<parameter name="end_time" type="datetime" />
+			<parameter name="au_id" type="int" />
+			<parameter name="status" type="int" />
+			<parameter name="pay_type" type="int"/>
+		</statement>
+		
+		<statement name="query_pro_order_info_list_count" resultType="int">
+			<![CDATA[SELECT COUNT(1)
+					 FROM PRO_ORDER  PO
+				     LEFT JOIN ACC_PERSON_INFO API ON API.AU_ID = PO.AU_ID
+				     LEFT JOIN ACC_USER_REG AUR ON PO.AU_ID = AUR.AU_ID
+				     JOIN MAJOR_PRODUCT MP ON MP.MP_ID = PO.MP_ID
+			]]>
+			<dynamic prepend="WHERE">
+				<isNotEmpty parameter="start_time">
+					<![CDATA[PO.CREATE_TIME >= #start_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="end_time">
+					<![CDATA[PO.CREATE_TIME <= #end_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="au_id">
+					<![CDATA[PO.AU_ID = #au_id#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="status">
+					<![CDATA[PO.STATUS = #status#]]>
+				</isNotEmpty>
+			    <isNotEmpty parameter="pay_type">
+					<![CDATA[PO.PAY_TYPE = #pay_type#]]>
+				</isNotEmpty>
+			</dynamic>
+			<parameter name="start_time" type="datetime" />
+			<parameter name="end_time" type="datetime" />
+			<parameter name="au_id" type="int" />
+			<parameter name="status" type="int" />
+			<parameter name="pay_type" type="int"/>
+		</statement>
+		
+		<statement name="query_pro_order_info"
+			resultType="entity" entityName="pro_order_detail_info">
+			<![CDATA[SELECT PO.PO_ID,PO.MP_ID,PO.AU_ID,API.REAL_NAME,AUR.MOBILE,MP.PRO_NAME,MP.PRO_NO,PO.ORDER_NO,
+						PO.PRICE,PO.DESPATCH_FEE,PO.STATUS,PO.REMARK,PO.PAY_TYPE,PO.CREATOR,PO.CREATE_TIME,
+						PO.UPDATOR,PO.UPDATE_TIME
+				     FROM PRO_ORDER  PO
+				     LEFT JOIN ACC_PERSON_INFO API ON API.AU_ID = PO.AU_ID
+				     LEFT JOIN ACC_USER_REG AUR ON PO.AU_ID = AUR.AU_ID
+				     JOIN MAJOR_PRODUCT MP ON MP.MP_ID = PO.MP_ID
+				     WHERE PO.PO_ID = #po_id#
+			]]>
+			<parameter name="po_id" type="int" />
+		</statement>
+		
+		<statement name="delete_pro_order_info" resultType="uc">
+			<![CDATA[DELETE 
+					 FROM PRO_ORDER
+					 WHERE PO_ID = #po_id# 
+			]]>
+			<parameter name="po_id" type="int" />
+		</statement>
+		
+		<statement name="exist_order_of_order_no" resultType="boolean">
+			<![CDATA[SELECT CASE WHEN EXISTS (SELECT PO_ID
+					 FROM PRO_ORDER 
+					 WHERE ORDER_NO = #order_no#) THEN 1
+					 ELSE 0 END
+					 FROM DUAL
+			]]>
+			<parameter name="order_no" type="string" />
+		</statement>
+		
+	</module>
+</root>

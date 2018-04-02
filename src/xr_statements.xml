@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="../lib/statements.xsd">
+	<include src="AccUserReg.xml" />
+	<include src="AccPersonInfo.xml" />
+	<include src="AccCorpInfo.xml" />
+	<include src="AccMsg.xml" />
+	<include src="AppInfo.xml" />
+	<include src="AccUserRegPwdHistory.xml" />
+	<include src="MajorProduct.xml" />
+	<include src="MajorService.xml" />
+	<include src="ProOrder.xml" />
+	<include src="CmNotice.xml" />
+	<include src="MaintenanceMan.xml" />
+	<include src="ZfbService.xml" />
+	<include src="ZfbOrder.xml" />
+	<include src="MyDict.xml" />
+</root>

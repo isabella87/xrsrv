@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../lib/statements.xsd">
+	<module description="major_product_ module" name="major_product">
+       <entity description="product_info table" name="product_info">
+			<field name="mp_id" type="int" />
+			<field name="pro_name" type="string" />
+            <field name="pro_no" type="string" />
+			<field name="price" type="decimal" />
+			<field name="type" type="string" />
+			<field name="status" type="int" />	
+            <field name="visible" type="int" />
+			<field name="creator" type="string" />
+			<field name="create_time" type="datetime" />
+			<field name="updator" type="string" />
+			<field name="update_time" type="datetime" />
+		</entity>
+		
+		<entity description="product_info table" name="product_info_not_con_id">
+			<field name="pro_name" type="string" />
+            <field name="pro_no" type="string" />
+			<field name="price" type="decimal" />
+			<field name="type" type="string" />
+			<field name="status" type="int" />	
+            <field name="visible" type="int" />
+			<field name="creator" type="string" />
+			<field name="create_time" type="datetime" />
+			<field name="updator" type="string" />
+			<field name="update_time" type="datetime" />
+		</entity>
+		
+		 <entity description="product_info_and_file_id table" name="product_info_and_file_id">
+			<field name="mp_id" type="int" />
+			<field name="pro_name" type="string" />
+            <field name="pro_no" type="string" />
+			<field name="price" type="decimal" />
+			<field name="type" type="string" />
+			<field name="status" type="int" />	
+            <field name="visible" type="int" />
+			<field name="creator" type="string" />
+			<field name="create_time" type="datetime" />
+			<field name="updator" type="string" />
+			<field name="update_time" type="datetime" />
+			<field name="file_id" type="int" />
+		</entity>
+		
+		 <entity description="bg_product_info table" name="bg_product_info">
+			<field name="mp_id" type="int" />
+			<field name="pro_name" type="string" />
+            <field name="pro_no" type="string" />
+			<field name="price" type="decimal" />
+			<field name="type" type="string" />
+			<field name="status" type="int" />	
+            <field name="visible" type="int" />
+			<field name="creator" type="string" />
+			<field name="create_time" type="datetime" />
+			<field name="updator" type="string" />
+			<field name="update_time" type="datetime" />
+			<field name="has_file" type="int" />
+		</entity>
+		
+		<entity description="file_info_ table" name="file_info">
+			<field name="file_id" type="int" />
+			<field name="file_type" type="int" />
+			<field name="object_id" type="int" />
+            <field name="name" type="string" />
+			<field name="last_write_time" type="datetime" />
+			<field name="description" type="string" />
+			<field name="summary" type="string" />
+			<field name="attrs" type="int" />	
+            <field name="parent_id" type="int" />
+            <field name="deleted" type="int" />
+		</entity>
+		
+		<entity description="file_content_ table" name="file_content">
+			<field name="file_id" type="int" />
+			<field name="content" type="string" />
+		</entity>
+		
+		<entity description="file_path_ table" name="file_path">
+			<field name="a_id" type="int" />
+			<field name="d_id" type="int" />
+            <field name="depth" type="int" />
+		</entity>
+		
+		<statement name="create_product_info" resultType="uc" autoKey="mp_id">
+			<![CDATA[INSERT INTO MAJOR_PRODUCT({product_info_not_con_id})
+				     VALUES(#pro_name#, #pro_no#, #price#, #type# , #status#, #visible#, #creator#, #create_time#,#updator#, #update_time#)
+			]]>
+			<parameter name="pro_name" type="string" />
+			<parameter name="pro_no" type="string" />
+			<parameter name="price" type="decimal" />
+			<parameter name="type" type="string" />
+			<parameter name="status" type="int" />
+			<parameter name="visible" type="int" />
+			<parameter name="creator" type="string" />
+			<parameter name="create_time" type="datetime" />
+			<parameter name="updator" type="string" />
+			<parameter name="update_time" type="datetime" />
+			
+		</statement>
+		
+		<statement name="update_product_info" resultType="uc">
+			<![CDATA[UPDATE MAJOR_PRODUCT
+					 SET  
+						PRODUCT_NAME = #pro_name#,
+					 	PRICE = #price#, 
+					 	TYPE=#type#, 
+					 	UPDATOR=#updator#,
+					  	UPDATE_TIME=#update_time#,
+					  	STATUS= #status#, 
+					   	VISIBLE=#visible#
+					 WHERE MP_ID = #mp_id#
+			]]>
+			<parameter name="mp_id" type="int" />
+			<parameter name="pro_name" type="string" />
+			<parameter name="price" type="decimal" />
+			<parameter name="type" type="string" />
+			<parameter name="status" type="int" />
+			<parameter name="visible" type="int" />
+			<parameter name="updator" type="string" />
+			<parameter name="update_time" type="datetime" />
+		</statement>
+		
+		<statement name="update_product_info_status" resultType="uc">
+			<![CDATA[UPDATE MAJOR_PRODUCT
+					 SET  
+					 	UPDATOR=#updator#,
+					  	UPDATE_TIME=#update_time#,
+					  	STATUS= #status# 
+					 WHERE MP_ID = #mp_id# AND STATUS = #old_status#
+			]]>
+			<parameter name="mp_id" type="int" />
+			<parameter name="status" type="int" />
+			<parameter name="old_status" type="int" />
+			<parameter name="updator" type="string" />
+			<parameter name="update_time" type="datetime" />
+		</statement>
+		
+		<statement name="query_product_info_list_for_bg" resultType="entities"
+			entityName="bg_product_info">
+			<![CDATA[SELECT MP.MP_ID,MP.PRO_NAME,MP.PRO_NO,MP.PRICE,MP.TYPE,MP.STATUS,MP.VISIBLE,
+					MP.CREATOR,MP.CREATE_TIME,MP.UPDATOR,MP.UPDATE_TIME,
+					CASE WHEN FF.FILE_ID IS NOT NULL THEN 1 ELSE 0 END HAS_FILE
+	 				 FROM MAJOR_PRODUCT  MP
+	 				 LEFT JOIN FS_FILE FF ON FF.OBJECT_ID = MP.MP_ID
+					 WHERE VISIBLE = 1
+			]]>
+			<dynamic prepend="and">
+				<isNotEmpty parameter="type">
+					<![CDATA[MP.TYPE = #type#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="status">
+					<![CDATA[MP.STATUS = #status#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="start_time">
+					<![CDATA[MP.CREATE_TIME >= #start_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="end_time">
+					<![CDATA[MP.CREATE_TIME <= #end_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="search_key">
+					<![CDATA[(MP.PRO_NAME LIKE #search_key# OR MP.TYPE LIKE #search_key#)]]>
+				</isNotEmpty>
+			</dynamic>
+			<![CDATA[ORDER BY MP.MP_ID DESC]]>
+			<parameter name="type" type="string" />
+			<parameter name="status" type="int" />
+			<parameter name="start_time" type="datetime" />
+			<parameter name="end_time" type="datetime" />
+			<parameter name="search_key" type="string" match="contains" />
+		</statement>
+		
+		<statement name="query_product_info_list" resultType="entities"
+			entityName="product_info">
+			<![CDATA[SELECT {product_info}
+	 				 FROM MAJOR_PRODUCT 
+					 WHERE VISIBLE = 1
+			]]>
+			<dynamic prepend="and">
+				<isNotEmpty parameter="type">
+					<![CDATA[TYPE = #type#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="status">
+					<![CDATA[STATUS = #status#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="start_time">
+					<![CDATA[CREATE_TIME >= #start_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="end_time">
+					<![CDATA[CREATE_TIME <= #end_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="search_key">
+					<![CDATA[(PRO_NAME LIKE #search_key# OR TYPE LIKE #search_key#)]]>
+				</isNotEmpty>
+			</dynamic>
+			<![CDATA[ORDER BY MP_ID DESC]]>
+			<parameter name="type" type="string" />
+			<parameter name="status" type="int" />
+			<parameter name="start_time" type="datetime" />
+			<parameter name="end_time" type="datetime" />
+			<parameter name="search_key" type="string" match="contains" />
+		</statement>
+		
+		<statement name="query_product_info_list_count" resultType="int">
+			<![CDATA[SELECT count(1)
+					 FROM MAJOR_PRODUCT 
+					 WHERE VISIBLE = 1
+			]]>
+			<dynamic prepend="and">
+				<isNotEmpty parameter="type">
+					<![CDATA[TYPE = #type#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="status">
+					<![CDATA[STATUS = #status#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="start_time">
+					<![CDATA[CREATE_TIME >= #start_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="end_time">
+					<![CDATA[CREATE_TIME <= #end_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="search_key">
+					<![CDATA[(PRO_NAME LIKE #search_key# OR TYPE LIKE #search_key#)]]>
+				</isNotEmpty>
+			</dynamic>
+			<parameter name="type" type="string" />
+			<parameter name="status" type="int" />
+			<parameter name="start_time" type="datetime" />
+			<parameter name="end_time" type="datetime" />
+			<parameter name="search_key" type="string" match="contains" />
+		</statement>
+		
+		<statement name="exist_product_of_pro_no" resultType="boolean">
+			<![CDATA[SELECT CASE WHEN EXISTS (SELECT MP_ID
+					 FROM MAJOR_PRODUCT 
+					 WHERE PRO_NO = #pro_no#) THEN 1
+					 ELSE 0 END
+					 FROM DUAL
+			]]>
+			<parameter name="pro_no" type="string" />
+		</statement>
+		
+		<statement name="query_product_info" resultType="entity"
+			entityName="product_info_and_file_id">
+			<![CDATA[SELECT MP.MP_ID,MP.PRO_NAME,MP.PRO_NO,MP.PRICE,MP.TYPE,MP.STATUS,MP.VISIBLE,
+					MP.CREATOR,MP.CREATE_TIME,MP.UPDATOR,MP.UPDATE_TIME,
+					FF.FILE_ID
+	 				 FROM MAJOR_PRODUCT  MP
+	 				 LEFT JOIN FS_FILE FF ON FF.OBJECT_ID = MP.MP_ID
+					 WHERE MP.MP_ID = #mp_id#
+			]]>
+			<parameter name="mp_id" type="int" />
+		</statement>
+	
+	<statement name="query_file_info_with_max_id" resultType="entity"
+			entityName="file_info">
+			<![CDATA[SELECT {file_info}
+					 FROM FS_FILE FF
+					 WHERE FF.FILE_ID = (SELECT MAX(FILE_ID) FROM FS_FILE WHERE OBJECT_ID = #mp_id#)
+			]]>
+			<parameter name="mp_id" type="int" />
+		</statement>
+	
+		<statement name="delete_product_info" resultType="uc">
+			<![CDATA[DELETE 
+					 FROM MAJOR_PRODUCT
+					 WHERE MP_ID = #mp_id# 
+			]]>
+			<parameter name="mp_id" type="int" />
+		</statement>
+		
+	</module>
+</root>

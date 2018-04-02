@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../lib/statements.xsd">
+	<module description="maintenance_man_ module" name="maintenance_man">
+       <entity description="worker_info table" name="worker_info">
+			<field name="mm_id" type="int" />
+			<field name="mm_name" type="string" />
+            <field name="mm_no" type="string" />
+			<field name="mm_level" type="string" />
+			<field name="mm_mobile" type="string" />
+			<field name="mm_intro" type="string" />	
+            <field name="enable" type="int" />
+			<field name="creator" type="string" />
+			<field name="create_time" type="datetime" />
+			<field name="updator" type="string" />
+			<field name="update_time" type="datetime" />
+		</entity>
+		<entity description="worker_info table" name="worker_info_not_con_id">
+			<field name="mm_name" type="string" />
+            <field name="mm_no" type="string" />
+			<field name="mm_level" type="string" />
+			<field name="mm_mobile" type="string" />
+			<field name="mm_intro" type="string" />	
+            <field name="enable" type="int" />
+			<field name="creator" type="string" />
+			<field name="create_time" type="datetime" />
+			<field name="updator" type="string" />
+			<field name="update_time" type="datetime" />
+		</entity>
+		
+		 <entity description="worker_info_and_file_id table" name="worker_info_and_file_id">
+			<field name="mm_id" type="int" />
+			<field name="mm_name" type="string" />
+            <field name="mm_no" type="string" />
+			<field name="mm_level" type="string" />
+			<field name="mm_mobile" type="string" />
+			<field name="mm_intro" type="string" />	
+            <field name="enable" type="int" />
+			<field name="creator" type="string" />
+			<field name="create_time" type="datetime" />
+			<field name="updator" type="string" />
+			<field name="update_time" type="datetime" />
+			<field name="file_id" type="int" />
+		</entity>
+		
+		 <entity description="bg_worker_info table" name="bg_worker_info">
+			<field name="mm_id" type="int" />
+			<field name="mm_name" type="string" />
+            <field name="mm_no" type="string" />
+			<field name="mm_level" type="string" />
+			<field name="mm_mobile" type="string" />
+			<field name="mm_intro" type="string" />	
+            <field name="enable" type="int" />
+			<field name="creator" type="string" />
+			<field name="create_time" type="datetime" />
+			<field name="updator" type="string" />
+			<field name="update_time" type="datetime" />
+			<field name="has_file" type="int" />
+		</entity>
+		
+		<statement name="create_worker_info" resultType="uc" autoKey="mm_id">
+			<![CDATA[INSERT INTO MAINTENANCE_MAN({worker_info_not_con_id})
+				     VALUES( #mm_name#, #mm_no#, #mm_level#, #mm_mobile# , #mm_intro#, #enable#, #creator#, #create_time#,#updator#, #update_time#)
+			]]>
+			<parameter name="mm_name" type="string" />
+			<parameter name="mm_no" type="string" />
+			<parameter name="mm_level" type="string" />
+			<parameter name="mm_mobile" type="string" />
+			<parameter name="mm_intro" type="string" />
+			<parameter name="enable" type="int" />
+			<parameter name="creator" type="string" />
+			<parameter name="create_time" type="datetime" />
+			<parameter name="updator" type="string" />
+			<parameter name="update_time" type="datetime" />
+			
+		</statement>
+		
+		<statement name="update_worker_info_mm_no" resultType="uc">
+			<![CDATA[UPDATE MAINTENANCE_MAN
+					 SET  
+					 	MM_NO = #mm_no#
+					 WHERE MM_ID = #mm_id#
+			]]>
+			<parameter name="mm_id" type="int" />
+			<parameter name="mm_no" type="string" />
+		</statement>
+		
+		<statement name="update_worker_info" resultType="uc">
+			<![CDATA[UPDATE MAINTENANCE_MAN
+					 SET  
+						MM_NAME = #mm_name#,
+					 	MM_NO = #mm_no#, 
+					 	MM_LEVEL=#mm_level#, 
+					 	MM_MOBILE=#mm_mobile#, 
+					 	MM_INTRO=#mm_intro#, 
+					 	UPDATOR=#updator#,
+					  	UPDATE_TIME=#update_time#,
+					  	ENABLE= #enable#, 
+					 WHERE MM_ID = #mm_id#
+			]]>
+			<parameter name="mm_id" type="int" />
+			<parameter name="mm_name" type="string" />
+			<parameter name="mm_no" type="string" />
+			<parameter name="mm_level" type="string" />
+			<parameter name="mm_mobile" type="string" />
+			<parameter name="mm_intro" type="string" />
+			<parameter name="enable" type="int" />
+			<parameter name="updator" type="string" />
+			<parameter name="update_time" type="datetime" />
+		</statement>
+		
+		<statement name="update_worker_info_status" resultType="uc">
+			<![CDATA[UPDATE MAINTENANCE_MAN
+					 SET  
+					 	UPDATOR=#updator#,
+					  	UPDATE_TIME=#update_time#,
+					  	ENABLE= #enable# 
+					 WHERE MM_ID = #mm_id# AND ENABLE = #old_enable#
+			]]>
+			<parameter name="mm_id" type="int" />
+			<parameter name="enable" type="int" />
+			<parameter name="old_enable" type="int" />
+			<parameter name="updator" type="string" />
+			<parameter name="update_time" type="datetime" />
+		</statement>
+		
+		<statement name="query_worker_info_list_for_bg" resultType="entities"
+			entityName="bg_worker_info">
+			<![CDATA[SELECT MM.MM_ID,MM.MM_NAME,MM.MM_NO,MM.MM_LEVEL,MM.MM_MOBILE,MM.MM_INTRO,MM.ENABLE,
+					MM.CREATOR,MM.CREATE_TIME,MM.UPDATOR,MM.UPDATE_TIME,
+					CASE WHEN FF.FILE_ID IS NOT NULL THEN 1 ELSE 0 END HAS_FILE
+	 				 FROM MAINTENANCE_MAN  MM
+	 				 LEFT JOIN FS_FILE FF ON FF.OBJECT_ID = MM.MM_ID
+					 WHERE 1 = 1
+			]]>
+			<dynamic prepend="and">
+				<isNotEmpty parameter="enable">
+					<![CDATA[MM.ENABLE = #enable#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="start_time">
+					<![CDATA[MM.CREATE_TIME >= #start_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="end_time">
+					<![CDATA[MM.CREATE_TIME <= #end_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="search_key">
+					<![CDATA[(MM.MM_NAME LIKE #search_key# OR MM.MM_MOBILE LIKE #search_key#)]]>
+				</isNotEmpty>
+			</dynamic>
+			<![CDATA[ORDER BY MM.MM_ID DESC]]>
+			<parameter name="enable" type="int" />
+			<parameter name="start_time" type="datetime" />
+			<parameter name="end_time" type="datetime" />
+			<parameter name="search_key" type="string" match="contains" />
+		</statement>
+		
+		<statement name="query_worker_info_list" resultType="entities"
+			entityName="worker_info_and_file_id">
+			<![CDATA[SELECT MM.MM_ID,MM.MM_NAME,MM.MM_NO,MM.MM_LEVEL,MM.MM_MOBILE,MM.MM_INTRO,MM.ENABLE,
+					MM.CREATOR,MM.CREATE_TIME,MM.UPDATOR,MM.UPDATE_TIME,FF.FILE_ID
+	 				 FROM MAINTENANCE_MAN MM
+	 				  LEFT JOIN FS_FILE FF ON FF.OBJECT_ID = MM.MM_ID
+					 WHERE 1 = 1 
+			]]>
+			<dynamic prepend="and">
+				<isNotEmpty parameter="enable">
+					<![CDATA[MM.ENABLE = #enable#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="start_time">
+					<![CDATA[MM.CREATE_TIME >= #start_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="end_time">
+					<![CDATA[MM.CREATE_TIME <= #end_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="search_key">
+					<![CDATA[(MM.MM_NAME LIKE #search_key# OR MM.MM_MOBILE LIKE #search_key#)]]>
+				</isNotEmpty>
+			</dynamic>
+			<![CDATA[ORDER BY MM.MM_ID DESC]]>
+			<parameter name="enable" type="int" />
+			<parameter name="start_time" type="datetime" />
+			<parameter name="end_time" type="datetime" />
+			<parameter name="search_key" type="string" match="contains" />
+		</statement>
+		
+		<statement name="query_worker_info_list_count" resultType="int">
+			<![CDATA[SELECT count(1)
+					 FROM MAINTENANCE_MAN 
+					 WHERE 1 = 1 
+			]]>
+			<dynamic prepend="and">
+				<isNotEmpty parameter="enable">
+					<![CDATA[ENABLE = #enable#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="start_time">
+					<![CDATA[CREATE_TIME >= #start_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="end_time">
+					<![CDATA[CREATE_TIME <= #end_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="search_key">
+					<![CDATA[(MM_NAME LIKE #search_key# OR MM_MOBILE LIKE #search_key#)]]>
+				</isNotEmpty>
+			</dynamic>
+			<parameter name="enable" type="int" />
+			<parameter name="start_time" type="datetime" />
+			<parameter name="end_time" type="datetime" />
+			<parameter name="search_key" type="string" match="contains" />
+		</statement>
+		
+		<statement name="exist_worker_info_of_mm_no" resultType="boolean">
+			<![CDATA[SELECT CASE WHEN EXISTS (SELECT MM_ID
+					 FROM MAINTENANCE_MAN 
+					 WHERE MM_NO = #mm_no#) THEN 1
+					 ELSE 0 END
+					 FROM DUAL
+			]]>
+			<parameter name="mm_no" type="string" />
+		</statement>
+		
+		<statement name="query_worker_info" resultType="entity"
+			entityName="worker_info_and_file_id">
+			<![CDATA[SELECT MM.MM_ID,MM.MM_NAME,MM.MM_NO,MM.MM_LEVEL,MM.MM_MOBILE,MM.MM_INTRO,MM.ENABLE,
+					MM.CREATOR,MM.CREATE_TIME,MM.UPDATOR,MM.UPDATE_TIME,
+					FF.FILE_ID
+	 				 FROM MAINTENANCE_MAN  MM
+	 				 LEFT JOIN FS_FILE FF ON FF.OBJECT_ID = MM.MM_ID
+					 WHERE MM.MM_ID = #mm_id#
+			]]>
+			<parameter name="mm_id" type="int" />
+		</statement>
+	
+	<statement name="query_file_info_with_max_mm_id" resultType="entity"
+			entityName="file_info">
+			<![CDATA[SELECT FILE_ID,FILE_TYPE,OBJECT_ID,NAME,LAST_WRITE_TIME,DESCRIPTION,SUMMARY,ATTRS,PARENT_ID,DELETED
+					 FROM FS_FILE FF
+					 WHERE FF.FILE_ID = (SELECT MAX(FILE_ID) FROM FS_FILE WHERE OBJECT_ID = #mm_id#)
+			]]>
+			<parameter name="mm_id" type="int" />
+		</statement>
+	
+		<statement name="delete_worker_info" resultType="uc">
+			<![CDATA[DELETE 
+					 FROM MAINTENANCE_MAN
+					 WHERE MM_ID = #mm_id# 
+			]]>
+			<parameter name="mm_id" type="int" />
+		</statement>
+		
+	</module>
+</root>

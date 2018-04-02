@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../lib/statements.xsd">
+	<module description="acc_person_info_ module" name="acc_person_info">
+         <entity description="acc_person_info table" name="acc_person_info">
+			<field name="au_id" type="int" />
+			<field name="login_name" type="string" />
+			<field name="reg_time" type="datetime" />
+			<field name="address" type="string" />
+			<field name="home_phone" type="string" />
+			<field name="postal_code" type="string" />
+			<field name="position" type="string" />
+			<field name="company" type="string" />
+			<field name="company_type" type="string" />
+			<field name="qq_number" type="string" />
+			<field name="update_time" type="datetime" />
+			<field name="create_time" type="datetime" />
+			<field name="real_name" type="string" />
+			<field name="id_card" type="string" />
+			<field name="mobile" type="string" />
+			<field name="email" type="string" />
+			<field name="status" type="int" />
+			<field name="user_code" type="string" />
+			<field name="user_type" type="int" />
+			<field name="org_code" type="string" />
+			<field name="mm_id" type="int" />
+			<field name="mm_file_id" type="int" />
+		</entity>
+		
+		<statement name="create_acc_person_info" resultType="uc">
+			<![CDATA[INSERT INTO ACC_PERSON_INFO(AU_ID, REAL_NAME, ID_CARD, ORG_CODE, CREATE_TIME)
+			         VALUES(#au_id#, #real_name#, #id_card#, #org_code#, SYSDATE())
+			]]>
+			<parameter name="au_id" type="int" />
+			<parameter name="real_name" type="string" />
+			<parameter name="id_card" type="string" />
+			<parameter name="org_code" type="string" />
+		</statement>
+		
+		<statement name="update_basic_info_by_au_id" resultType="uc">
+		     <![CDATA[UPDATE ACC_PERSON_INFO
+				     SET ADDRESS = #address#,
+				     HOME_PHONE = #home_phone#,
+				     POSTAL_CODE = #postal_code#,
+				     POSITION = #position#,
+				     COMPANY = #company#,
+				     COMPANY_TYPE = #company_type#,
+				     QQ_NUMBER = #qq_number#,
+					 UPDATE_TIME = SYSDATE()
+					 WHERE AU_ID = #au_id#
+			 ]]>
+		     <parameter name="au_id" type="int"/>
+		     <parameter name="address" type="string"/>
+		     <parameter name="home_phone" type="string"/>
+		     <parameter name="postal_code" type="string"/>
+		     <parameter name="position" type="string"/>
+		     <parameter name="company" type="string"/>
+		     <parameter name="company_type" type="string"/>
+		     <parameter name="qq_number" type="string"/>
+		</statement>
+
+		<statement name="exist_acc_person_info_by_id_card"
+			resultType="bool">
+			<![CDATA[SELECT CASE WHEN EXISTS (SELECT 1 FROM ACC_PERSON_INFO WHERE ID_CARD = #id_card#) THEN 1
+				     	    ELSE 0 END 
+				     FROM DUAL
+			]]>
+			<parameter name="id_card" type="string" />
+		</statement>
+		
+		<statement name="query_acc_person_info_by_au_id" entityName="acc_person_info" resultType="entity">
+		   <![CDATA[SELECT API.AU_ID, AUR.LOGIN_NAME, AUR.REG_TIME, API.ADDRESS, API.HOME_PHONE, API.POSTAL_CODE, API.POSITION, API.COMPANY,
+		            API.COMPANY_TYPE, API.QQ_NUMBER,  API.UPDATE_TIME, API.CREATE_TIME, API.REAL_NAME, API.ID_CARD, AUR.MOBILE, API.EMAIL,
+		            AUR.STATUS, AUR.USER_CODE, AUR.USER_TYPE, API.ORG_CODE,AUR.MM_ID,IFNULL(FF.FILE_ID,0) MM_FILE_ID
+		            FROM ACC_PERSON_INFO API
+		            JOIN ACC_USER_REG AUR ON API.AU_ID = AUR.AU_ID
+		            LEFT JOIN FS_FILE FF ON AUR.MM_ID = FF.OBJECT_ID AND FF.FILE_TYPE = 11
+		            WHERE API.AU_ID = #au_id#]]>
+		   <parameter name="au_id" type="int" />
+		</statement>
+		
+		<statement name="update_email_by_au_id" resultType="uc">
+		    <![CDATA[UPDATE ACC_PERSON_INFO
+		             SET EMAIL = #email#,
+		             UPDATE_TIME = SYSDATE()
+					 WHERE AU_ID = #au_id#
+					 AND NOT EXISTS (SELECT 1 FROM ACC_PERSON_INFO WHERE EMAIL = #email#
+					           UNION SELECT 1 FROM ACC_CORP_INFO WHERE EMAIL = #email#) 
+		    ]]>
+		    <parameter name="au_id" type="int" />
+		    <parameter name="email" type="string" />
+		</statement>
+		
+		<statement name="update_name_and_id_card_by_au_id" resultType="uc">
+		    <![CDATA[
+	    		 UPDATE ACC_PERSON_INFO
+	             	SET REAL_NAME = #real_name#, ID_CARD = #id_card#
+				  WHERE AU_ID = #au_id#
+		    ]]>
+		    <parameter name="au_id" type="int" />
+		    <parameter name="real_name" type="string" />
+		    <parameter name="id_card" type="string" />
+		</statement>
+			
+		<statement name="query_acc_person_info_list" resultType="entities"
+			entityName="acc_person_info" allowPaging="true">
+			<![CDATA[SELECT AUR.AU_ID, AUR.LOGIN_NAME, AUR.REG_TIME, API.ADDRESS, API.HOME_PHONE, API.POSTAL_CODE, API.POSITION, API.COMPANY,
+			         API.COMPANY_TYPE, API.QQ_NUMBER, API.UPDATE_TIME, API.CREATE_TIME, API.REAL_NAME, API.ID_CARD, AUR.MOBILE, API.EMAIL, 
+			         AUR.STATUS,  AUR.USER_CODE, AUR.USER_TYPE, API.ORG_CODE,AUR.MM_ID,IFNULL(FF.FILE_ID,0) MM_FILE_ID
+			         FROM ACC_PERSON_INFO API
+			         JOIN ACC_USER_REG AUR ON AUR.AU_ID = API.AU_ID
+			         LEFT JOIN FS_FILE FF ON AUR.MM_ID = FF.OBJECT_ID AND FF.FILE_TYPE = 11
+			]]>
+			<dynamic prepend="WHERE">
+				<isNotEmpty parameter="start_time">
+					<![CDATA[AUR.REG_TIME >= #start_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="end_time">
+					<![CDATA[AUR.REG_TIME <= #end_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="status">
+					<![CDATA[AUR.STATUS = #status#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="login_name">
+					<![CDATA[AUR.LOGIN_NAME LIKE #login_name#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="real_name">
+					<![CDATA[API.REAL_NAME LIKE #real_name#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="mobile">
+					<![CDATA[AUR.MOBILE LIKE #mobile#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="recommend_user_code">
+					<![CDATA[AUR.RECOMMEND_USER_CODE LIKE #recommend_user_code#]]>
+				</isNotEmpty>
+			</dynamic>
+			<![CDATA[ORDER BY AUR.AU_ID]]>
+			<parameter name="start_time" type="datetime" />
+			<parameter name="end_time" type="datetime" />
+			<parameter name="status" type="int" />
+			<parameter name="login_name" type="string" match="contains" />
+			<parameter name="real_name" type="string" match="contains" />
+			<parameter name="mobile" type="string" match="contains" />
+			<parameter name="recommend_user_code" type="string" match="contains" />
+		</statement>
+			
+		<statement name="query_acc_person_info_by_login_name_or_mobile"
+			resultType="entity" entityName="acc_person_info">
+			<![CDATA[SELECT AUR.AU_ID, AUR.LOGIN_NAME, AUR.REG_TIME, API.ADDRESS, API.HOME_PHONE, API.POSTAL_CODE, API.POSITION, API.COMPANY,
+			         API.COMPANY_TYPE, API.QQ_NUMBER, API.UPDATE_TIME, API.CREATE_TIME, API.REAL_NAME, API.ID_CARD, AUR.MOBILE, API.EMAIL,
+			         AUR.STATUS, AUR.USER_CODE, AUR.USER_TYPE, API.ORG_CODE,AUR.MM_ID,IFNULL(FF.FILE_ID,0) MM_FILE_ID
+			         FROM ACC_PERSON_INFO API
+			         JOIN ACC_USER_REG AUR ON API.AU_ID = AUR.AU_ID
+			         LEFT JOIN FS_FILE FF ON AUR.MM_ID = FF.OBJECT_ID AND FF.FILE_TYPE = 11
+        		     WHERE AUR.MOBILE = #login_name_or_mobie# OR AUR.LOGIN_NAME = #login_name_or_mobie#
+        	]]>
+			<parameter name="login_name_or_mobie" type="string" />
+		</statement>
+		
+	</module>
+</root>

@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../lib/statements.xsd">
+	<module description="acc_user_reg module" name="acc_user_reg">
+
+		<entity name="acc_user_reg" description="acc_user_reg table">
+		    <field name="au_id" type="int" />
+			<field name="login_name" type="string" />
+			<field name="user_type" type="int" />
+		    <field name="mobile" type="string" />
+			<field name="recommend_user_code" type="string" />
+			<field name="status" type="int" />
+			<field name="reg_time" type="datetime" />
+			<field name="auditor" type="string" />
+			<field name="audit_time" type="datetime" />
+			<field name="user_code" type="string" />
+			<field name="bg_privilege" type="int" />
+			<field name="pwd_security" type="string" />
+			<field name="mm_id" type="int" />
+		</entity>
+		
+		<entity name="card_name" description="acc_user_reg_info table">
+			<field name="id_card" type="string" />
+			<field name="name" type="string" />
+		</entity>
+		
+	   <entity name="auth_info" description="auth_info table">
+			<field name="login_name" type="string"/>
+			<field name="real_name" type="string"/>
+			<field name="mobile" type="string"/>
+			<field name="status" type="int"/>
+			<field name="user_type" type="int"/>
+			<field name="rec_info_modi_count" type="int" />
+			<field name="bg_privilege" type="int" />
+		</entity>
+		
+		<entity name="acc_user_info_of_prj" description="acc_user_info_of_prj table">
+		     <field name="au_id" type="int" />
+		     <field name="real_name" type="string" />
+		     <field name="mobile" type="string" />
+		</entity>
+		
+		<entity name="account_sign_info" description="account_sign_info table">
+		    <field name="au_id" type="int" />
+		    <field name="login_name" type="string" />
+		    <field name="real_name" type="string" />
+		    <field name="mobile" type="string" />
+		    <field name="name_or_org_name" type="string" />
+		    <field name="id_no_or_organ_code" type="string" />
+		    <field name="user_type" type="int" />
+		</entity>
+		
+	 <statement name="create_acc_user_reg" resultType="uc" description="创建用户" autoKey="au_id">
+	     <![CDATA[INSERT INTO ACC_USER_REG(LOGIN_NAME, PASSWORD, PWD_SECURITY,USER_TYPE, MOBILE, RECOMMEND_USER_CODE, STATUS, REG_TIME, USER_CODE, REC_INFO_MODI_COUNT)
+	     	SELECT  #login_name#, #password#,#pwd_security#, #user_type#, #mobile#, #recommend_user_code#, #status#, #reg_time#, #user_code#, #rec_info_modi_count# FROM DUAL 
+	     	WHERE NOT EXISTS (SELECT * FROM ACC_USER_REG WHERE LOWER(LOGIN_NAME) = LOWER(#login_name#) OR USER_CODE = #user_code# OR MOBILE = #mobile#) 
+         ]]>
+         <parameter name="login_name" type="string"/>
+         <parameter name="password" type="string"/>
+         <parameter name="user_type" type="int"/>
+         <parameter name="mobile" type="string"/>
+         <parameter name="pwd_security" type="string"/>
+         <parameter name="recommend_user_code" type="string"/>
+         <parameter name="status" type="int"/>
+         <parameter name="reg_time" type="datetime"/>
+         <parameter name="user_code" type="string" />
+		 <parameter name="rec_info_modi_count" type="int" />
+	 </statement>
+	 
+	 <statement name="query_acc_user_reg_by_au_id"
+			resultType="entity" entityName="acc_user_reg" description="查询用户注册信息通过用户Id">
+			<![CDATA[SELECT AUR.AU_ID, AUR.LOGIN_NAME, AUR.USER_TYPE, AUR.MOBILE, AUR.RECOMMEND_USER_CODE, AUR.STATUS STATUS, 
+			         AUR.REG_TIME, AUR.AUDITOR, AUR.AUDIT_TIME, AUR.USER_CODE,AUR.BG_PRIVILEGE,AUR.PWD_SECURITY,IFNULL(AUR.MM_ID,0)
+			         FROM ACC_USER_REG AUR
+					 WHERE AUR.AU_ID = #au_id#
+			]]>
+			<parameter name="au_id" type="int" />
+		</statement>
+
+		<statement name="query_acc_user_reg_by_login_name"
+			resultType="entity" entityName="acc_user_reg" description="查询用户注册信息通过登录名">
+			<![CDATA[SELECT AUR.AU_ID, AUR.LOGIN_NAME, AUR.USER_TYPE, AUR.MOBILE, AUR.RECOMMEND_USER_CODE, AUR.STATUS STATUS, 
+			         AUR.REG_TIME, AUR.AUDITOR, AUR.AUDIT_TIME, AUR.USER_CODE,AUR.PWD_SECURITY,IFNULL(AUR.MM_ID,0)
+			         FROM ACC_USER_REG AUR
+					 WHERE AUR.LOGIN_NAME = #login_name#
+			]]>
+			<parameter name="login_name" type="string" />
+		</statement>
+		
+		<statement name="update_auditor_info" resultType="uc" description="更新用户审核信息通过用户Id">
+		   <![CDATA[UPDATE ACC_USER_REG
+		            SET AUDITOR = #auditor#,
+		            AUDIT_TIME = #audit_time#
+		            WHERE AU_ID = #au_id#]]>
+		    <parameter name="au_id" type="int" />
+		    <parameter name="auditor" type="string" />
+		    <parameter name="audit_time" type="datetime" />
+		</statement>
+		
+		<statement name="update_mm_id" resultType="uc" description="">
+		   <![CDATA[UPDATE ACC_USER_REG
+		            SET MM_ID = #mm_id#
+		            WHERE AU_ID = #au_id#]]>
+		    <parameter name="au_id" type="int" />
+		    <parameter name="mm_id" type="int" />
+		</statement>
+		
+		<statement name="query_au_id_by_user_code" resultType="int" description="查询用户Id通过用户编号">
+		     <![CDATA[SELECT IF(AUR.AU_ID,AUR.AU_ID, 0 ) 
+		              FROM DUAL
+                      LEFT JOIN ACC_USER_REG AUR ON AUR.USER_CODE = #user_code#]]>
+		     <parameter name="user_code" type="string" />
+		</statement>
+		
+	    <statement name="query_user_info_by_user_code" resultType="entity" entityName="acc_user_info_of_prj" description="查询用户姓名和手机号通过用户编号">
+		     <![CDATA[SELECT AUR.AU_ID, IF(API.REAL_NAME, ACI.ORG_NAME,API.REAL_NAME) REAL_NAME, AUR.MOBILE
+		              FROM ACC_USER_REG AUR
+		              LEFT JOIN ACC_PERSON_INFO API ON API.AU_ID = AUR.AU_ID
+		              LEFT JOIN ACC_CORP_INFO ACI ON ACI.AU_ID = AUR.AU_ID
+		              WHERE AUR.USER_CODE = #user_code#]]>
+		     <parameter name="user_code" type="string" />
+		</statement>
+
+		<statement name="exist_login_name" resultType="bool" description="判断登录名是否存在">
+			<![CDATA[SELECT CASE
+				               WHEN EXISTS(SELECT 1 FROM ACC_USER_REG WHERE LOWER(LOGIN_NAME) = LOWER(#login_name#)) THEN 1
+				               ELSE 0 END 
+				     FROM DUAL
+			]]>
+			<parameter name="login_name" type="string" />
+		</statement>
+		
+		<statement name="update_pwd" resultType="uc" description="更新用户密码">
+			<![CDATA[UPDATE ACC_USER_REG
+				     SET PASSWORD = #new_pwd#
+					 WHERE AU_ID = #au_id#
+			]]>
+			<parameter name="au_id" type="int" />
+			<parameter name="new_pwd" type="string" />
+		</statement>
+		
+		<statement name="exist_account_of_mobile" resultType="int" description="判断手机号是否存在">
+			<![CDATA[SELECT AU_ID FROM ACC_USER_REG WHERE MOBILE = #mobile#
+			]]>
+			<parameter name="mobile" type="string" />
+		</statement>
+		
+		<statement name="exist_account_of_user_code" resultType="bool" description="判断用户编码是否存在">
+			<![CDATA[SELECT CASE
+				              WHEN EXISTS (SELECT 1 FROM ACC_USER_REG WHERE USER_CODE = #user_code#) THEN 1
+				              ELSE 0 END
+				      FROM DUAL
+			]]>
+			<parameter name="user_code" type="string" />
+		</statement>
+		
+		<statement name="exist_acc_user_info_by_login_name_or_mobile"
+			resultType="boolean" description="判断登录名或手机号是否存在">
+			<![CDATA[SELECT CASE
+				     	WHEN EXISTS (SELECT 1 FROM ACC_USER_REG WHERE LOWER(LOGIN_NAME) = LOWER(#login_name_or_mobile#) OR MOBILE = #login_name_or_mobile#) THEN 1
+				     	ELSE 0 END 
+				     FROM DUAL
+			]]>
+			<parameter name="login_name_or_mobile" type="string" />
+		</statement>
+		
+		<statement name="validate" resultType="int" description="验证登录通过用户名和密码">
+			<![CDATA[SELECT MIN(REG.AU_ID)
+			         FROM ACC_USER_REG REG
+        	         WHERE (LOWER(REG.LOGIN_NAME) = LOWER(#login_name_or_mobile#) OR REG.MOBILE = #login_name_or_mobile#)
+       		         AND REG.PASSWORD = #password# AND REG.STATUS <> 99
+       		]]>
+			<parameter name="login_name_or_mobile" type="string" />
+			<parameter name="password" type="string" />
+		</statement>
+		
+		 <statement name="validate2" resultType="boolean" description="验证登录通过用户Id和密码">
+			<![CDATA[SELECT CASE WHEN EXISTS
+						(SELECT * FROM ACC_USER_REG WHERE AU_ID = #au_id# AND PASSWORD = #password# AND STATUS <> 99)
+						THEN 1 ELSE 0 END 
+					FROM DUAL
+			]]>
+			<parameter name="au_id" type="int" />
+			<parameter name="password" type="string" size="100" />
+		</statement>
+		
+		<statement name="query_mobile_by_au_id" resultType="string" description="查询手机号通过用户Id">
+		   <![CDATA[SELECT AUR.MOBILE FROM ACC_USER_REG AUR
+		            WHERE AUR.AU_ID = #au_id#
+		   ]]>
+		   <parameter name="au_id" type="int"/>
+		</statement>
+		
+		<statement name="update_status_by_au_id" resultType="uc" description="更新用户状态">
+		     <![CDATA[UPDATE ACC_USER_REG AUR
+		              SET STATUS = #status#
+		              WHERE AU_ID = #au_id# and status = #old_status#]]>
+		     <parameter name="au_id" type="int"/>
+		     <parameter name="status" type="int"/>
+		     <parameter name="old_status" type="int"/>
+		</statement>
+		
+		<statement name="update_bg_privilege" resultType="uc" description="更新用户权限">
+		     <![CDATA[UPDATE ACC_USER_REG AUR
+		              SET BG_PRIVILEGE = #bg_privilege#
+		              WHERE AU_ID = #au_id# and status = 2  ]]>
+		     <parameter name="au_id" type="int"/>
+		     <parameter name="bg_privilege" type="int"/>
+		</statement>
+		
+		<statement name="query_au_id_by_login_name_or_mobile" resultType="int" description="查询用户Id通过登录名或手机号">
+		    <![CDATA[SELECT IF(AUR.AU_ID,AUR.AU_ID, 0)
+		            FROM ACC_USER_REG AUR
+		            WHERE AUR.LOGIN_NAME = #login_name_or_mobile# OR AUR.MOBILE = #login_name_or_mobile#]]>
+		     <parameter name="login_name_or_mobile" type="string"/>
+		</statement>
+			
+		<statement name="authenticate" resultType="entity" entityName="auth_info" description="查询Account服务信息">
+		       <![CDATA[SELECT AUR.LOGIN_NAME, IF(API.REAL_NAME, ACI.ORG_NAME,API.REAL_NAME) REAL_NAME,
+		                AUR.MOBILE MOBILE, AUR.STATUS STATUS, AUR.USER_TYPE, AUR.REC_INFO_MODI_COUNT,AUR.BG_PRIVILEGE
+		                FROM ACC_USER_REG AUR
+		                LEFT JOIN ACC_PERSON_INFO API ON AUR.AU_ID = API.AU_ID
+		                LEFT JOIN ACC_CORP_INFO ACI ON AUR.AU_ID = ACI.AU_ID
+		                WHERE AUR.AU_ID = #au_id#]]>
+		       <parameter name="au_id" type="int"/>
+		</statement>
+		
+		<statement name="query_status_by_au_id" resultType="int" description="查询用户状态">
+			<![CDATA[SELECT STATUS FROM ACC_USER_REG
+				     WHERE AU_ID=#au_id#
+			]]>
+			<parameter name="au_id" type="int" />
+		</statement>
+		
+		<statement name="update_mobile_of_au_id" resultType="uc" description="更新用户手机号">
+			<![CDATA[UPDATE ACC_USER_REG
+				     SET MOBILE = #mobile#
+					 WHERE AU_ID = #au_id#
+					 AND NOT EXISTS (SELECT 1 FROM (SELECT 1 FROM ACC_USER_REG WHERE MOBILE = #mobile# AND AU_ID <> #au_id#)A) 
+			]]>
+			<parameter name="au_id" type="int" />
+			<parameter name="mobile" type="string" />
+		</statement>
+		
+		<statement name="query_id_card_name_by_au_id" resultType="entity" entityName="card_name" description="查询姓名和身份证号">
+			<![CDATA[
+				SELECT IF(API.ID_CARD,  ACI.ID_CARD,API.ID_CARD) ID_CARD, IF(API.REAL_NAME,ACI.REAL_NAME,API.REAL_NAME) NAME 
+				  FROM ACC_USER_REG AUR
+			 LEFT JOIN ACC_PERSON_INFO API ON AUR.AU_ID = API.AU_ID
+			 LEFT JOIN ACC_CORP_INFO ACI ON AUR.AU_ID = ACI.AU_ID
+			     WHERE AUR.AU_ID = #au_id#
+			]]>
+			<parameter name="au_id" type="int" />
+		</statement>
+		
+		<statement name="update_recomm_info" resultType="uc" description="更新推荐码修改次数">
+			<![CDATA[
+				UPDATE ACC_USER_REG AUR 
+				   SET REC_INFO_MODI_COUNT = REC_INFO_MODI_COUNT + 1,
+				       RECOMMEND_USER_CODE = #recomm_info# 
+				 WHERE AUR.AU_ID = #au_id# 
+				   AND REC_INFO_MODI_COUNT = 0
+			]]>	   
+			<parameter name="au_id" type="int" />
+			<parameter name="recomm_info" type="string"/>
+		</statement>
+		
+		<statement name="query_acount_sign_info_by_au_id" resultType="entity" entityName="account_sign_info">
+		    <![CDATA[SELECT AUR.AU_ID, AUR.LOGIN_NAME, IFNULL(API.REAL_NAME, ACI.REAL_NAME) REAL_NAME, AUR.MOBILE, 
+		             IFNULL(API.REAL_NAME, ACI.ORG_NAME) NAME_OR_ORG_NAME,
+		             IFNULL(API.ID_CARD, ACI.ORG_CODE_NO) ID_NO_OR_ORGAN_CODE, AUR.USER_TYPE
+		             FROM ACC_USER_REG AUR
+		             LEFT JOIN ACC_PERSON_INFO API ON AUR.AU_ID = API.AU_ID
+		             LEFT JOIN ACC_CORP_INFO ACI ON AUR.AU_ID = ACI.AU_ID
+		             WHERE AUR.AU_ID = #au_id#
+            ]]>
+            <parameter name="au_id" type="int" />
+		</statement>
+	</module>
+</root>

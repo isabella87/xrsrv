@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../lib/statements.xsd">
+	<module description="acc_corp_info module" name="acc_corp_info">
+       <entity description="acc_corp_info table" name="acc_corp_info">
+			<field name="au_id" type="int" />
+			<field name="login_name" type="string" />
+			<field name="reg_time" type="datetime" />
+			<field name="org_name" type="string" />
+			<field name="buss_lic" type="string" />
+			<field name="tax_lic" type="string" />
+			<field name="org_code_no" type="string" />	
+            <field name="law_name" type="string" />
+            <field name="law_id_card" type="string" />
+            <field name="acc_user_name" type="string" />
+            <field name="account" type="string" />
+            <field name="acc_bank" type="string" />
+            <field name="create_time" type="datetime" />
+            <field name="update_time" type="datetime" />
+            <field name="mobile" type="string" />
+            <field name="real_name" type="string" />
+            <field name="position" type="string" />
+            <field name="id_card" type="string" />
+            <field name="company" type="string" />
+            <field name="company_type" type="string" />
+			<field name="address" type="string" />
+			<field name="postal_code" type="string" />
+			<field name="home_phone" type="string" />
+			<field name="qq_number" type="string" />
+			<field name="email" type="string" />
+			<field name="status" type="int" />
+			<field name="jx_status" type="int" />
+			<field name="user_code" type="string" />
+		    <field name="user_type" type="int" />
+		    <field name="allow_invest" type="int" />
+		    <field name="allow_borrow" type="int" />
+		</entity>
+		
+		<statement name="create_acc_corp_info" resultType="uc">
+			<![CDATA[INSERT INTO ACC_CORP_INFO(AU_ID, REAL_NAME, ID_CARD, CREATE_TIME)
+				     VALUES(#au_id#, #real_name#, #id_card#, SYSDATE())
+			]]>
+			<parameter name="au_id" type="int" />
+			<parameter name="real_name" type="string" />
+			<parameter name="id_card" type="string" />
+		</statement>
+		
+		<statement name="query_acc_corp_info_list" resultType="entities"
+			entityName="acc_corp_info">
+			<![CDATA[SELECT ACI.AU_ID, AUR.LOGIN_NAME, AUR.REG_TIME, ACI.ORG_NAME, ACI.BUSS_LIC, ACI.TAX_LIC, ACI.ORG_CODE_NO, ACI.LAW_NAME,
+		             ACI.LAW_ID_CARD, ACI.ACC_USER_NAME, ACI.ACCOUNT, ACI.ACC_BANK, ACI.CREATE_TIME, ACI.UPDATE_TIME, AUR.MOBILE, ACI.REAL_NAME,
+		             ACI.POSITION, ACI.ID_CARD, ACI.COMPANY, ACI.COMPANY_TYPE, ACI.ADDRESS, ACI.POSTAL_CODE, ACI.HOME_PHONE, ACI.QQ_NUMBER, 
+		             ACI.EMAIL, AUR.STATUS, IF(AJU.DATEPOINT,0,1) JX_STATUS, AUR.USER_CODE, AUR.USER_TYPE, AUR.ALLOW_INVEST, AUR.ALLOW_BORROW
+					 FROM ACC_CORP_INFO ACI 
+				     JOIN ACC_USER_REG AUR ON ACI.AU_ID = AUR.AU_ID
+				     LEFT JOIN ACC_JX_USER AJU ON ACI.AU_ID = AJU.AU_ID
+			]]>
+			<dynamic prepend="WHERE">
+				<isNotEmpty parameter="start_reg_time">
+					<![CDATA[AUR.REG_TIME >= #start_reg_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="end_reg_time">
+					<![CDATA[AUR.REG_TIME <= #end_reg_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="start_audit_time">
+					<![CDATA[AUR.AUDIT_TIME >= #start_audit_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="end_audit_time">
+					<![CDATA[AUR.AUDIT_TIME <= #end_audit_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="status">
+					<![CDATA[AUR.STATUS = #status#]]>
+				</isNotEmpty>
+			    <isNotEmpty parameter="jx_status">
+					<![CDATA[IF(AJU.DATEPOINT,0,1) = #jx_status#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="login_name">
+					<![CDATA[AUR.LOGIN_NAME LIKE #login_name#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="real_name">
+					<![CDATA[ACI.REAL_NAME LIKE #real_name#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="mobile">
+					<![CDATA[AUR.MOBILE LIKE #mobile#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="auditor">
+					<![CDATA[AUR.AUDITOR LIKE #auditor#]]>
+				</isNotEmpty>
+			</dynamic>
+			<![CDATA[ORDER BY AUR.AU_ID]]>
+			<parameter name="start_reg_time" type="datetime" />
+			<parameter name="end_reg_time" type="datetime" />
+			<parameter name="start_audit_time" type="datetime" />
+			<parameter name="end_audit_time" type="datetime" />
+			<parameter name="status" type="int" />
+			<parameter name="jx_status" type="int"/>
+			<parameter name="login_name" type="string" match="contains" />
+			<parameter name="real_name" type="string" match="contains" />
+			<parameter name="mobile" type="string" match="contains" />
+			<parameter name="auditor" type="string" match="contains" />
+		</statement>
+	
+		<statement name="update_corp_account_info_by_au_id" resultType="uc">
+		     <![CDATA[UPDATE ACC_CORP_INFO
+				     SET LAW_NAME = #law_name#,
+				     LAW_ID_CARD = #law_id_card#,
+				     BUSS_LIC = #buss_lic#,
+				     TAX_LIC = #tax_lic#,
+				     ORG_CODE_NO = #org_code_no#,
+				     ACC_USER_NAME = #acc_user_name#,
+				     ACCOUNT = #account#,
+				     ACC_BANK = #acc_bank#,
+				     ORG_NAME = #org_name#,
+					 UPDATE_TIME = SYSDATE
+					 WHERE AU_ID = #au_id#
+			 ]]>
+		     <parameter name="au_id" type="int"/>
+		     <parameter name="law_name" type="string"/>
+		     <parameter name="law_id_card" type="string"/>
+		     <parameter name="buss_lic" type="string"/>
+		     <parameter name="tax_lic" type="string"/>
+		     <parameter name="org_code_no" type="string"/>
+		     <parameter name="acc_user_name" type="string"/>
+		     <parameter name="account" type="string"/>
+		     <parameter name="acc_bank" type="string"/>
+		     <parameter name="org_name" type="string"/>
+		</statement>
+		
+		<statement name="update_basic_info_by_au_id" resultType="uc">
+		   <![CDATA[UPDATE ACC_CORP_INFO
+				     SET ADDRESS = #address#,
+				     HOME_PHONE = #home_phone#,
+				     POSTAL_CODE = #postal_code#,
+				     POSITION = #position#,
+				     COMPANY = #company#,
+				     COMPANY_TYPE = #company_type#,
+				     QQ_NUMBER = #qq_number#,
+					 UPDATE_TIME = SYSDATE()
+					 WHERE AU_ID = #au_id#
+			 ]]>
+		     <parameter name="au_id" type="int"/>
+		     <parameter name="address" type="string"/>
+		     <parameter name="home_phone" type="string"/>
+		     <parameter name="postal_code" type="string"/>
+		     <parameter name="position" type="string"/>
+		     <parameter name="company" type="string"/>
+		     <parameter name="company_type" type="string"/>
+		     <parameter name="qq_number" type="string"/>
+		</statement>
+		
+		<statement name="exist_acc_corp_info_by_id_card" resultType="bool">
+			<![CDATA[SELECT CASE WHEN EXISTS (SELECT AU_ID FROM ACC_CORP_INFO WHERE ID_CARD = #id_card#) THEN 1
+				     	    ELSE 0 END 
+				     FROM DUAL
+			]]>
+			<parameter name="id_card" type="string" />
+		</statement>
+		
+		<statement name="query_acc_corp_info_by_au_id" entityName="acc_corp_info" resultType="entity">
+		    <![CDATA[SELECT ACI.AU_ID, AUR.LOGIN_NAME, AUR.REG_TIME, ACI.ORG_NAME, ACI.BUSS_LIC, ACI.TAX_LIC, ACI.ORG_CODE_NO, ACI.LAW_NAME,
+		             ACI.LAW_ID_CARD, ACI.ACC_USER_NAME, ACI.ACCOUNT, ACI.ACC_BANK, ACI.CREATE_TIME, ACI.UPDATE_TIME, AUR.MOBILE, ACI.REAL_NAME,
+		             ACI.POSITION, ACI.ID_CARD, ACI.COMPANY, ACI.COMPANY_TYPE, ACI.ADDRESS, ACI.POSTAL_CODE, ACI.HOME_PHONE, ACI.QQ_NUMBER, 
+		             ACI.EMAIL, AUR.STATUS, IF(AJU.DATEPOINT,0,1) JX_STATUS, AUR.USER_CODE, AUR.USER_TYPE, AUR.ALLOW_INVEST, AUR.ALLOW_BORROW
+		             FROM ACC_CORP_INFO ACI
+		             JOIN ACC_USER_REG AUR ON ACI.AU_ID = AUR.AU_ID
+		             LEFT JOIN ACC_JX_USER AJU ON ACI.AU_ID = AJU.AU_ID
+		             WHERE ACI.AU_ID = #au_id#
+			]]>
+		    <parameter name="au_id" type="int" />
+		</statement>
+		
+		<statement name="update_email_by_au_id" resultType="uc">
+		    <![CDATA[UPDATE ACC_CORP_INFO
+		             SET EMAIL = #email#,
+		             UPDATE_TIME = SYSDATE()
+					 WHERE AU_ID = #au_id#
+					 AND NOT EXISTS (SELECT 1 FROM ACC_PERSON_INFO WHERE EMAIL = #email#
+					           UNION SELECT 1 FROM ACC_CORP_INFO WHERE EMAIL = #email#) 
+		    ]]>
+		    <parameter name="au_id" type="int" />
+		    <parameter name="email" type="string" />
+		</statement>
+		
+		<statement name="query_acc_corp_info_by_login_name_or_mobile"
+			resultType="entity" entityName="acc_corp_info">
+			<![CDATA[SELECT ACI.AU_ID, AUR.LOGIN_NAME, AUR.REG_TIME, ACI.ORG_NAME, ACI.BUSS_LIC, ACI.TAX_LIC, ACI.ORG_CODE_NO, ACI.LAW_NAME,
+		             ACI.LAW_ID_CARD, ACI.ACC_USER_NAME, ACI.ACCOUNT, ACI.ACC_BANK, ACI.CREATE_TIME, ACI.UPDATE_TIME, AUR.MOBILE, ACI.REAL_NAME,
+		             ACI.POSITION, ACI.ID_CARD, ACI.COMPANY, ACI.COMPANY_TYPE, ACI.ADDRESS, ACI.POSTAL_CODE, ACI.HOME_PHONE, ACI.QQ_NUMBER, 
+		             ACI.EMAIL, AUR.STATUS, IF(AJU.DATEPOINT,0,1) JX_STATUS, AUR.USER_CODE, AUR.USER_TYPE, AUR.ALLOW_INVEST, AUR.ALLOW_BORROW
+				     FROM ACC_CORP_INFO ACI  
+				     JOIN ACC_USER_REG AUR ON ACI.AU_ID = AUR.AU_ID
+				     LEFT JOIN ACC_JX_USER AJU ON ACI.AU_ID = AJU.AU_ID
+				     WHERE AUR.LOGIN_NAME = #login_name_or_mobile# OR AUR.MOBILE=#login_name_or_mobile#
+			]]>
+			<parameter name="login_name_or_mobile" type="string" />
+		</statement>
+	</module>
+</root>

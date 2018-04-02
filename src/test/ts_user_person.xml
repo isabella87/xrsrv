@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rows>
+    <row AU_ID="10" NAME="杭培10" ID_CARD="112521198103235410" MOBILE="13862334710" EMAIL="hangpeizhen10@163.com" 
+         USER_ID="8989897878010" DATEPOINT="2015-07-13 10:30:23" REMARK="备注" STATUS="1" TU_ID="1"/>
+          
+    <row AU_ID="113" NAME="杭培113" ID_CARD="112521198103235413" MOBILE="13862334713" EMAIL="hangpeizhen10@163.com" 
+         USER_ID="8989897878010" DATEPOINT="2015-07-13 10:30:23" REMARK="备注" STATUS="1" TU_ID="2"/>
+</rows>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../lib/statements.xsd">
+	<module description="app_info module" name="app_info">
+		
+		<entity name="app_info" description="app_info table">
+			<field name="id" type="int" />
+			<field name="name" type="string" />
+			<field name="content" type="string" />
+		</entity>
+		
+		<entity name="app_user" description="app_user table">
+			<field name="c_id" type="string" />
+			<field name="au_id" type="int" />
+		</entity>
+			
+		<statement name="get_app_info" resultType="entities" entityName="app_info" allowPaging="false">
+			<![CDATA[SELECT ID ,NAME, CONTENT FROM APP_INFO]]>
+		</statement>
+	</module>
+</root>

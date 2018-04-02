@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../lib/statements.xsd">
+	<module description="major_service_ module" name="major_service">
+       <entity description="service_info table" name="service_info">
+			<field name="ms_id" type="int" />
+			<field name="service_name" type="string" />
+			<field name="service_no" type="string" />
+			<field name="content" type="string" />
+			<field name="due_time" type="datetime" />
+			<field name="mobile" type="string" />
+			<field name="address" type="string" />
+			<field name="type" type="string" />
+			<field name="name" type="string" />
+			<field name="id_card" type="string" />
+			<field name="gender" type="int" />
+			<field name="au_id" type="int" />	
+            <field name="user_type" type="int" />
+            <field name="tracker" type="string" defaultValue="暂未分配"/>
+            <field name="fee" type="decimal" />
+            <field name="status" type="int" />
+            <field name="create_time" type="datetime" />
+            <field name="update_time" type="datetime" />
+		</entity>
+		
+		<entity description="service_info table" name="insert_service_info">
+			<field name="service_name" type="string" />
+			<field name="service_no" type="string" />
+			<field name="content" type="string" />
+			<field name="due_time" type="datetime" />
+			<field name="mobile" type="string" />
+			<field name="address" type="string" />
+			<field name="type" type="string" />
+			<field name="name" type="string" />
+			<field name="id_card" type="string" />
+			<field name="gender" type="int" />
+			<field name="au_id" type="int" />	
+            <field name="user_type" type="int" />
+            <field name="tracker" type="string" defaultValue="暂未分配"/>
+            <field name="fee" type="decimal" />
+            <field name="status" type="int" />
+            <field name="create_time" type="datetime" />
+            <field name="update_time" type="datetime" />
+		</entity>
+		
+		 <entity description="ser_remark table" name="ser_remark">
+			<field name="sr_id" type="int" />
+			<field name="ms_id" type="int" />
+			<field name="due_time" type="datetime" />
+			<field name="content" type="string" />
+			<field name="datepoint" type="datetime" />
+			<field name="remark" type="string" />
+			<field name="creator" type="string" />	
+		</entity>
+		
+		 <entity description="ser_remark table" name="ser_remark_not_con_id">
+			<field name="ms_id" type="int" />
+			<field name="due_time" type="datetime" />
+			<field name="content" type="string" />
+			<field name="datepoint" type="datetime" />
+			<field name="remark" type="string" />
+			<field name="creator" type="string" />	
+		</entity>
+		
+		 <entity description="ser_tracker table" name="ser_tracker">
+			<field name="ms_id" type="int" />
+			<field name="tracker" type="string" />
+			<field name="datepoint" type="datetime" />
+			<field name="datepoint2" type="datetime" />
+		</entity>
+		
+		<statement name="create_major_service_info" resultType="uc" autoKey="ms_id">
+			<![CDATA[INSERT INTO MAJOR_SERVICE({insert_service_info})
+				     VALUES(#service_name#, #service_no#, #content#, #due_time#,#mobile#, #address#,#type#, #name#,#id_card#,#gender#,#au_id#,#user_type#, #tracker#,#fee#, #status#,#create_time#,#update_time#)
+			]]>
+			<parameter name="service_name" type="string" />
+			<parameter name="service_no" type="string" />
+			<parameter name="content" type="string" />
+			<parameter name="due_time" type="datetime" />
+			<parameter name="mobile" type="string" />
+			<parameter name="address" type="string" />
+			<parameter name="type" type="string" />
+			<parameter name="name" type="string" />
+			<parameter name="id_card" type="string" />
+			<parameter name="gender" type="int" />
+			<parameter name="au_id" type="int" />	
+            <parameter name="user_type" type="int" />
+            <parameter name="tracker" type="string" />
+            <parameter name="fee" type="decimal" />
+            <parameter name="status" type="int" />
+            <parameter name="create_time" type="datetime" />
+            <parameter name="update_time" type="datetime" />
+		</statement>
+		
+		<statement name="update_major_service_info" resultType="uc">
+			<![CDATA[UPDATE MAJOR_SERVICE
+					 SET
+					 	service_name = #service_name#, 
+					 	content = #content#, 
+						due_time = #due_time#,
+					 	mobile = #mobile#, 
+						address = #address#,
+					 	type = #type#, 
+					 	au_id = #au_id#,
+					 	user_type = #user_type#, 
+					 	tracker = #tracker#,
+					 	fee = #fee#, 
+					 	status = #status#,
+						update_time = #update_time#
+					 WHERE MS_ID = #ms_id#
+			]]>
+			<parameter name="ms_id" type="int" />
+			<parameter name="service_name" type="string" />
+			<parameter name="content" type="string" />
+			<parameter name="due_time" type="datetime" />
+			<parameter name="mobile" type="string" />
+			<parameter name="address" type="string" />
+			<parameter name="type" type="string" />
+			<parameter name="name" type="string" />
+			<parameter name="id_card" type="string" />
+			<parameter name="gender" type="int" />
+			<parameter name="au_id" type="int" />	
+            <parameter name="user_type" type="int" />
+            <parameter name="tracker" type="string" />
+            <parameter name="fee" type="decimal" />
+            <parameter name="status" type="int" />
+            <parameter name="update_time" type="datetime" />
+		</statement>
+		
+		<statement name="update_major_service_info_status" resultType="uc">
+			<![CDATA[UPDATE MAJOR_SERVICE
+					 SET
+					 	status = #status#,
+						update_time = #update_time#
+					 WHERE MS_ID = #ms_id# AND STATUS = #old_status#
+			]]>
+			<parameter name="ms_id" type="int" />
+            <parameter name="status" type="int" />
+            <parameter name="old_status" type="int" />
+            <parameter name="update_time" type="datetime" />
+		</statement>
+		
+		<statement name="accept_major_service" resultType="uc">
+			<![CDATA[UPDATE MAJOR_SERVICE
+					 SET
+					 	fee= #amt#,
+					 	status = #status#,
+					 	due_time = #due_time#,
+						update_time = #update_time#,
+						tracker = #tracker#
+					 WHERE MS_ID = #ms_id# AND STATUS = #old_status#
+			]]>
+			<parameter name="ms_id" type="int" />
+			<parameter name="amt" type="decimal" />
+            <parameter name="status" type="int" />
+            <parameter name="old_status" type="int" />
+            <parameter name="due_time" type="datetime" />
+            <parameter name="update_time" type="datetime" />
+            <parameter name="tracker" type="string" />
+		</statement>
+		
+		<statement name="query_service_info_list" resultType="entities"
+			entityName="service_info">
+			<![CDATA[SELECT {service_info}
+					 FROM MAJOR_SERVICE 
+			]]>
+			<dynamic prepend="WHERE">
+				<isNotEmpty parameter="au_id">
+					<![CDATA[(USER_TYPE = 1 AND AU_ID = #au_id#)]]>
+				</isNotEmpty>
+				<equals parameter="user_type" value="0">
+					<![CDATA[USER_TYPE = #user_type#]]>
+				</equals>
+				<isNotEmpty parameter="status">
+					<![CDATA[STATUS = #status#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="start_time">
+					<![CDATA[CREATE_TIME >= #start_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="end_time">
+					<![CDATA[CREATE_TIME <= #end_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="search_key">
+					<![CDATA[(SERVICE_NAME LIKE #search_key# OR TYPE LIKE #search_key#)]]>
+				</isNotEmpty>
+			</dynamic>
+			<![CDATA[ORDER BY MS_ID DESC]]>
+			<parameter name="start_time" type="datetime" />
+			<parameter name="end_time" type="datetime" />
+			<parameter name="status" type="int" />
+			<parameter name="user_type" type="int" />
+			<parameter name="au_id" type="int" />
+			<parameter name="search_key" type="string" match="contains" />
+		</statement>
+		
+		<statement name="query_service_info_list_count" resultType="int"
+			entityName="service_info">
+			<![CDATA[SELECT count(1)
+					 FROM MAJOR_SERVICE 
+			]]>
+			<dynamic prepend="WHERE">
+				<isNotEmpty parameter="au_id">
+					<![CDATA[(USER_TYPE = 1 AND AU_ID = #au_id#)]]>
+				</isNotEmpty>
+				<equals parameter="user_type" value="0">
+					<![CDATA[USER_TYPE = #user_type#]]>
+				</equals>
+				<isNotEmpty parameter="status">
+					<![CDATA[STATUS = #status#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="start_time">
+					<![CDATA[CREATE_TIME >= #start_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="end_time">
+					<![CDATA[CREATE_TIME <= #end_time#]]>
+				</isNotEmpty>
+				<isNotEmpty parameter="search_key">
+					<![CDATA[(SERVICE_NAME LIKE #search_key# OR TYPE LIKE #search_key#)]]>
+				</isNotEmpty>
+			</dynamic>
+			<parameter name="start_time" type="datetime" />
+			<parameter name="end_time" type="datetime" />
+			<parameter name="status" type="int" />
+			<parameter name="user_type" type="int" />
+			<parameter name="au_id" type="int" />
+			<parameter name="search_key" type="string" match="contains" />
+		</statement>
+		
+		<statement name="query_service_info" resultType="entity"
+			entityName="service_info">
+			<![CDATA[SELECT {service_info}
+					 FROM MAJOR_SERVICE
+					 WHERE MS_ID = #ms_id# 
+			]]>
+			<parameter name="ms_id" type="int" />
+		</statement>
+		
+		<statement name="delete_major_service_info" resultType="uc">
+			<![CDATA[DELETE 
+					 FROM MAJOR_SERVICE
+					 WHERE MS_ID = #ms_id# 
+			]]>
+			<parameter name="ms_id" type="int" />
+		</statement>
+	
+		<statement name="create_ser_remark" resultType="uc" autoKey="sr_id">
+			<![CDATA[INSERT INTO SER_REMARK({ser_remark_not_con_id})
+				     VALUES(#ms_id#, #due_time#,#content#, #datepoint#,#creator#)
+			]]>
+			<parameter name="ms_id" type="int" />
+			<parameter name="due_time" type="datetime" />
+			<parameter name="content" type="string" />
+			<parameter name="datepoint" type="datetime" />
+			<parameter name="remark" type="string" />
+			<parameter name="creator" type="string" />	
+		</statement>
+		
+		<statement name="query_ser_remark_list" resultType="entities" entityName="ser_remark">
+			<![CDATA[SELECT ({ser_remark}) FROM SER_REMARK
+				     WHERE MS_ID = #ms_id# 
+				     ORDER BY SR_ID DESC
+			]]>
+			<parameter name="ms_id" type="int" />
+		</statement>
+		
+		<statement name="create_ser_tracker" resultType="uc">
+			<![CDATA[INSERT INTO SER_TRACKER({ser_tracker})
+				     VALUES(#ms_id#, #ms_id#, #due_time#,#content#, #datepoint#,#creator#)
+			]]>
+			<parameter name="ms_id" type="int" />
+			<parameter name="tracker" type="string" />
+			<parameter name="datepoint" type="datetime" />
+			<parameter name="datepoint2" type="datetime" />
+		</statement>
+		
+		<statement name="query_ser_tracker" resultType="entity" entityName="ser_tracker">
+			<![CDATA[SELECT ({ser_tracker}) FROM SER_TRACKER
+				     WHERE MS_ID = #ms_id# AND DATEPOINT < SYSDATE() AND DATEPOINT2 > SYSDATE()
+			]]>
+			<parameter name="ms_id" type="int" />
+		</statement>
+		
+		<statement name="exist_service_of_service_no" resultType="boolean">
+			<![CDATA[SELECT CASE WHEN EXISTS (SELECT MS_ID
+					 FROM MAJOR_SERVICE 
+					 WHERE SERVICE_NO = #service_no#) THEN 1
+					 ELSE 0 END
+					 FROM DUAL
+			]]>
+			<parameter name="service_no" type="string" />
+		</statement>
+		
+	</module>
+</root>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../lib/statements.xsd">
+	<module description="acc_msg module" name="acc_msg">
+	
+		<statement name="create_lost_pwd_code" resultType="uc" autoKey="m_id">
+			<![CDATA[INSERT INTO MSG_LOST_PWD (MOBILE, V_CODE, DATEPOINT,STATUS)
+					VALUES ( #mobile#, #v_code#, #datepoint#,0)
+			]]>
+			<parameter name="mobile" type="string" />
+			<parameter name="v_code" type="string" />
+			<parameter name="datepoint" type="datetime" />
+		</statement>
+
+		<statement name="check_lost_pwd_code" resultType="boolean">
+			<![CDATA[SELECT 
+						CASE WHEN EXISTS(SELECT * FROM MSG_LOST_PWD WHERE MOBILE = #mobile# AND V_CODE = #v_code#
+							AND DATEPOINT > #datepoint# AND STATUS = 0) THEN 1
+						ELSE 0 END 
+					 FROM DUAL
+			]]>
+			<parameter name="mobile" type="string" />
+			<parameter name="v_code" type="string" />
+			<parameter name="datepoint" type="datetime" />
+		</statement>
+		
+		<statement name="update_lost_pwd_code" resultType="uc">
+			<![CDATA[
+				UPDATE MSG_LOST_PWD SET STATUS=1 
+				WHERE MOBILE=#mobile# AND V_CODE=#v_code# AND STATUS=0
+			]]>
+			<parameter name="mobile" type="string"/>
+			<parameter name="v_code" type="string"/>
+		</statement>
+		
+		<statement name="clear_msg_lost_pwd" resultType="uc">
+			<![CDATA[UPDATE MSG_LOST_PWD SET STATUS = 1 
+					WHERE MOBILE = #mobile#
+			]]>
+			<parameter name="mobile" type="string" />
+		</statement>
+		
+		<statement name="clear_msg_reg_account" resultType="updated-count">
+			<![CDATA[
+				DELETE FROM MSG_REG_USER 
+				 WHERE MOBILE=#mobile#
+			]]>
+			<parameter name="mobile" type="string"/>
+		</statement>
+		
+		<statement name="create_reg_account_code" resultType="updated-count" autoKey="m_id">
+			<![CDATA[
+				INSERT INTO MSG_REG_USER(MOBILE ,V_CODE ,DATEPOINT,STATUS) 
+				VALUES(#mobile#,#v_code#,#datepoint#,0)
+			]]>
+			<parameter name="mobile" type="string"/>
+			<parameter name="v_code" type="string"/>
+			<parameter name="datepoint" type="datetime"/>
+		</statement>
+		
+		<statement name="check_reg_account_code" resultType="bool">
+			<![CDATA[
+				SELECT CASE WHEN EXISTS(SELECT * FROM MSG_REG_USER WHERE MOBILE=#mobile#  AND STATUS=0 AND V_CODE=#v_code# AND DATEPOINT>=#date#) THEN 1
+				ELSE 0
+				END
+				FROM DUAL
+			]]>
+			<parameter name="mobile" type="string"/>
+			<parameter name="v_code" type="string"/>
+			<parameter name="date" type="datetime"/>
+		</statement>
+		
+		<statement name="update_acvice_code_status" resultType="updated-count">
+			<![CDATA[
+				UPDATE MSG_REG_USER SET STATUS=1 
+				WHERE MOBILE=#mobile# AND V_CODE=#v_code# and STATUS = 0
+			]]>
+			<parameter name="mobile" type="string"/>
+			<parameter name="v_code" type="string"/>
+		</statement>
+		
+		<statement name="create_change_mobile_code" resultType="updated-count" autoKey="m_id">
+			<![CDATA[
+				INSERT INTO MSG_CHANGE_MOBILE (MOBILE, V_CODE, DATEPOINT,STATUS)
+				VALUES (#mobile#, #v_code#, #datepoint#,0)
+			]]>
+			<parameter name="mobile" type="string"/>
+			<parameter name="v_code" type="string"/>
+			<parameter name="datepoint" type="datetime"/>
+		</statement>
+		
+		<statement name="update_change_mobile_status" resultType="updated-count">
+			<![CDATA[
+				UPDATE MSG_CHANGE_MOBILE SET STATUS=1 
+				WHERE MOBILE=#mobile# AND V_CODE=#v_code# AND STATUS=0
+			]]>
+			<parameter name="mobile" type="string"/>
+			<parameter name="v_code" type="string"/>
+		</statement>
+		
+		<statement name="check_change_mobile_code" resultType="boolean">
+			<![CDATA[
+				SELECT CASE WHEN EXISTS(SELECT * FROM MSG_CHANGE_MOBILE WHERE MOBILE = #mobile# AND V_CODE = #v_code#
+					AND DATEPOINT > #datepoint# AND STATUS = 0) THEN 1
+					ELSE 0 END 
+				FROM DUAL
+			]]>
+			<parameter name="mobile" type="string" />
+			<parameter name="v_code" type="string" />
+			<parameter name="datepoint" type="datetime" />
+		</statement>
+		
+		<statement name="create_sms_ym_code" resultType="updated-count" autoKey="ms_id">
+			<![CDATA[ 
+				INSERT INTO MSG_SMS_YM (MOBILE, CONTENT, T_CODE, P_ID, DATEPOINT)
+				VALUES ( #mobile#, #content#, #t_code#, #p_id#, #datepoint#)
+			]]>
+			<parameter name="mobile" type="string" />
+			<parameter name="content" type="string" />
+			<parameter name="t_code" type="int" />
+			<parameter name="p_id"	type="int" />
+			<parameter name="datepoint" type="datetime" /> 
+		</statement>	
+	</module>
+</root>

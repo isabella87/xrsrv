@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../lib/statements.xsd">
+	<module description="zfb_service_ module" name="zfb_service">
+       <entity description="zfb_service_info table" name="zfb_service_info">
+			<field name="zs_id" type="int" />
+			<field name="subject" type="string" />
+			<field name="body" type="string" />
+			<field name="out_trade_no" type="string" />
+			<field name="timeout_express" type="string" />
+			<field name="time_expire" type="string" />
+			<field name="total_amount" type="decimal" />
+			<field name="goods_type" type="string" />
+			<field name="trade_no" type="string" />
+			<field name="seller_id" type="string" />
+			<field name="passback_params" type="string" />
+			<field name="ms_id" type="int" />	
+            <field name="done" type="int" />
+            <field name="datepoint" type="datetime"/>
+            <field name="datepoint2" type="datetime" />
+		</entity>
+		
+		<entity description="insert_zfb_service_info table" name="insert_zfb_service_info">
+			<field name="subject" type="string" />
+			<field name="body" type="string" />
+			<field name="out_trade_no" type="string" />
+			<field name="timeout_express" type="string" />
+			<field name="time_expire" type="string" />
+			<field name="total_amount" type="decimal" />
+			<field name="goods_type" type="string" />
+			<field name="ms_id" type="int" />	
+            <field name="done" type="int" />
+            <field name="datepoint" type="datetime"/>
+		</entity>
+		
+		
+		<statement name="create_zfb_service_info" resultType="uc" autoKey="zs_id">
+			<![CDATA[INSERT INTO ZFB_SERVICE({insert_zfb_service_info})
+						SELECT type,service_name,#out_trade_no#,#timeout_express#,#time_expire#,fee,0,#ms_id#,#done#,#datepoint#  
+						FROM MAJOR_SERVICE WHERE MS_ID =#ms_id#
+			]]>
+			<parameter name="timeout_express" type="string" />
+			<parameter name="time_expire" type="string" />
+			<parameter name="out_trade_no" type="string" />
+			<parameter name="ms_id" type="int" />	
+            <parameter name="done" type="int" />
+            <parameter name="datepoint" type="datetime"/>
+		</statement>
+		
+		<statement name="update_xfb_service_passback_params" resultType="uc">
+			<![CDATA[UPDATE ZFB_SERVICE
+					 SET
+					 	PASSBACK_PARAMS = #passback_params#
+					 WHERE ZS_ID = #zs_id#
+			]]>
+			<parameter name="zs_id" type="int" />
+			<parameter name="passback_params" type="string" />
+		</statement>
+		
+		<statement name="query_zfb_service_info" resultType="entity"
+			entityName="zfb_service_info">
+			<![CDATA[SELECT {zfb_service_info}
+					 FROM ZFB_SERVICE
+					 WHERE ZS_ID = #zs_id#
+			]]>
+			<parameter name="zs_id" type="int" />
+		</statement>
+		
+	</module>
+</root>

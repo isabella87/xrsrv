@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../lib/statements.xsd">
+	<module description="zfb_order_ module" name="zfb_order">
+       <entity description="zfb_order_info table" name="zfb_order_info">
+			<field name="zo_id" type="int" />
+			<field name="subject" type="string" />
+			<field name="body" type="string" />
+			<field name="out_trade_no" type="string" />
+			<field name="timeout_express" type="string" />
+			<field name="time_expire" type="string" />
+			<field name="total_amount" type="decimal" />
+			<field name="goods_type" type="string" />
+			<field name="trade_no" type="string" />
+			<field name="seller_id" type="string" />
+			<field name="passback_params" type="string" />
+			<field name="po_id" type="int" />	
+            <field name="done" type="int" />
+            <field name="datepoint" type="datetime"/>
+            <field name="datepoint2" type="datetime" />
+		</entity>
+		
+		<entity description="insert_zfb_order_info table" name="insert_zfb_order_info">
+			<field name="subject" type="string" />
+			<field name="body" type="string" />
+			<field name="out_trade_no" type="string" />
+			<field name="timeout_express" type="string" />
+			<field name="time_expire" type="string" />
+			<field name="total_amount" type="decimal" />
+			<field name="goods_type" type="string" />
+			<field name="po_id" type="int" />	
+            <field name="done" type="int" />
+            <field name="datepoint" type="datetime"/>
+		</entity>
+		
+		
+		<statement name="create_zfb_order_info" resultType="uc" autoKey="zo_id">
+			<![CDATA[INSERT INTO ZFB_ORDER({insert_zfb_order_info})
+						SELECT MP.TYPE,MP.PRO_NAME,#out_trade_no#,#timeout_express#,#time_expire#,PO.PRICE,0,#po_id#,#done#,#datepoint#  
+						FROM PRO_ORDER PO JOIN MAJOR_PRODUCT MP ON MP.MP_ID = PO.MP_ID WHERE PO.PO_ID =#po_id#
+			]]>
+			<parameter name="timeout_express" type="string" />
+			<parameter name="time_expire" type="string" />
+			<parameter name="out_trade_no" type="string" />
+			<parameter name="po_id" type="int" />	
+            <parameter name="done" type="int" />
+            <parameter name="datepoint" type="datetime"/>
+		</statement>
+		
+		<statement name="update_xfb_service_passback_params" resultType="uc">
+			<![CDATA[UPDATE ZFB_ORDER
+					 SET
+					 	PASSBACK_PARAMS = #passback_params#
+					 WHERE ZO_ID = #zo_id#
+			]]>
+			<parameter name="zo_id" type="int" />
+			<parameter name="passback_params" type="string" />
+		</statement>
+		
+		<statement name="query_zfb_order_info" resultType="entity"
+			entityName="zfb_order_info">
+			<![CDATA[SELECT {zfb_order_info}
+					 FROM ZFB_ORDER
+					 WHERE ZO_ID = #zo_id#
+			]]>
+			<parameter name="zo_id" type="int" />
+		</statement>
+		
+	</module>
+</root>

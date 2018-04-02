@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../lib/statements.xsd">
+	<module description="acc_user_reg_pwd_history module" name="acc_user_reg_pwd_history">
+		<entity  description="acc_user_reg_pwd_history table" name="acc_user_reg_pwd_history">
+			<field name="operator" type="int"/>
+			<field name="operate_time" type="datetime"/>
+			<field name="source" type="int"/>
+			<field name="vcode" type="string"/>
+		</entity>
+	
+	   <statement name="create_acc_user_reg_pwd_history" resultType="uc" autoKey="id">
+			<![CDATA[INSERT INTO ACC_USER_REG_PWD_HISTORY ({acc_user_reg_pwd_history})
+		             VALUES(#operator#, SYSDATE(), #source#, #vcode#)]]>
+			<parameter name="operator" type="int"/>
+			<parameter name="source" type="int"/>
+		    <parameter name="vcode" type="string"/>
+		</statement>
+		
+		<statement name="query_acc_user_reg_pwd_history_by_id" resultType="entity" entityName="acc_user_reg_pwd_history">
+			<![CDATA[SELECT {acc_user_reg_pwd_history} FROM ACC_USER_REG_PWD_HISTORY WHERE ID = #id#]]>
+			<parameter name="id" type="int"/>
+		</statement>
+	</module>
+</root>

@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../../lib/routes.xsd">
+	
+	<module prefix="/wap">
+		<route pattern="/${id}" class="com.xrsrv.wap.WapBaseService"
+			method="execute" verb="GET" template="/debug">
+		</route>
+		<route pattern="/do-notify" class="com.xrsrv.wap.WapDoNotifyService"
+			method="execute" verb="POST" template="/debug">
+		</route>
+	</module>
+	
+	<!-- 用户注册模块 -->
+	<module prefix="/reg">
+		<route pattern="/mydict" class="com.xrsrv.msg.MsgService"
+			method="queryMyDict" verb="GET" template="/debug">
+		</route>
+		<route pattern="/mydict" class="com.xrsrv.msg.MsgService"
+			method="create" verb="PUT" template="/debug">
+		</route>
+		
+		<route pattern="/rcode-url" class="com.xrsrv.account.AccountService"
+			method="getUrlWithRcode" verb="GET" template="/debug">
+		</route>
+			
+		<route pattern="/rq-code-pic" class="com.xrsrv.account.AccountService"
+			method="getRqCodePicture" verb="GET" template="/debug">
+		</route>
+		
+		<route pattern="/send-user-mobile-code" class="com.xrsrv.account.AccountService"
+			method="sendUserMobileCode" verb="PUT" template="/debug">
+		</route>
+		<route pattern="/send-corp-mobile-code" class="com.xrsrv.account.AccountService"
+			method="sendCorpMobileCode" verb="PUT" template="/debug">
+		</route>
+		<route pattern="/validate-mobile-code" class="com.xrsrv.account.AccountService"
+			method="validateMobileCode" verb="POST" template="/debug">
+		</route>
+		<route pattern="/register-person" class="com.xrsrv.account.AccountService"
+			method="regPerson" verb="PUT" template="/debug">
+		</route>
+		<route pattern="/register-corp" class="com.xrsrv.account.AccountService"
+			method="regCorp" verb="PUT" template="/debug">
+		</route>
+		<route pattern="/captcha-image"
+			class="org.xx.armory.security.impl.SimpleExpressionCaptchaImageProvider" verb="GET" />
+	</module>
+	
+	<!-- 账户登陆、登出 -->
+	<module prefix="/account">
+		<route pattern="/sign-in" class="com.xrsrv.account.UserAuthorityService"
+			method="signIn" verb="POST" />
+		<route pattern="" class="com.xrsrv.account.UserAuthorityService"
+			method="account" verb="GET" />
+		<route pattern="/sign-out" class="com.xrsrv.account.UserAuthorityService"
+			method="signOut" verb="POST" />
+		<route pattern="/user-info" class="com.xrsrv.account.AccountService"
+			method="queryUserInfo" verb="GET" template="/debug">
+		</route>
+		<route pattern="/user-info" class="com.xrsrv.account.AccountService"
+			method="updateUserInfo" verb="POST" template="/debug">
+		</route>
+		<route pattern="/update-password" class="com.xrsrv.account.AccountService"
+			method="updatePassword" verb="POST" template="/debug">
+		</route>
+		<!--  
+		<route pattern="/send-old-vcode" class="com.xrsrv.account.AccountService"
+			method="sendCodeOfOldMobile" verb="PUT" template="/debug">
+		</route>
+		-->
+		<route pattern="/send-new-vcode" class="com.xrsrv.account.AccountService" 
+			method="sendCodeWithNewMobile" verb="PUT" template="/debug">
+		</route>
+		<route pattern="/update-mobile" class="com.xrsrv.account.AccountService"
+			method="updateMobile" verb="POST" template="/debug">
+		</route>
+		<route pattern="/update-email" class="com.xrsrv.account.AccountService"
+			method="updateEmail" verb="POST" template="/debug">
+		</route>
+		<route pattern="/send-lost-pwd-active-code" class="com.xrsrv.account.AccountService"
+			method="sendLostPwdActiveCode" verb="PUT" template="/debug">
+		</route>
+		<route pattern="/reset-pwd" class="com.xrsrv.account.AccountService"
+			method="resetPwd" verb="POST" template="/debug">
+		</route>	
+		<route pattern="/recomm-info" class="com.xrsrv.account.AccountService"
+			method="updateRecommInfo" verb="POST" template="/debug">
+		</route>
+		<!-- 设置用户后台权限 -->
+		<route pattern="/set-privilege" class="com.xrsrv.account.AccountService"
+			method="setBgPrivilege" verb="POST" template="/debug">
+		</route>
+		<route pattern="/cancel-privilege" class="com.xrsrv.account.AccountService"
+			method="cancelBgPrivilege" verb="POST" template="/debug">
+		</route>
+			
+	</module>
+	
+	<!-- 商品相关服务 -->
+	<module prefix="/major-product">
+		<route pattern="" class="com.xrsrv.products.ProductService"
+			method="createMajorProduct" verb="PUT" />
+		<route pattern="/upload" class="com.xrsrv.products.ProductService"
+			method="uploadMajorProduct" verb="PUT" />
+		<route pattern="/upload/single" class="com.xrsrv.products.ProductService"
+			method="uploadSingleMajorProduct" verb="PUT" />
+		<route pattern="/${id}" class="com.xrsrv.products.ProductService"
+			method="updateMajorProduct" verb="POST" />
+		<route pattern="/list" class="com.xrsrv.products.ProductService"
+			method="queryMajorProductList" verb="GET" />
+		<route pattern="/list/bg" class="com.xrsrv.products.ProductService"
+			method="queryMajorProductListForBg" verb="GET" />
+		<route pattern="/${id}" class="com.xrsrv.products.ProductService"
+			method="queryMajorProductById" verb="GET" />
+		<route pattern="/${id}/del" class="com.xrsrv.products.ProductService"
+			method="deleteMajorProductById" verb="POST" />
+		<route pattern="/${id}/up" class="com.xrsrv.products.ProductService"
+			method="upMajorProductById" verb="POST" />
+		<route pattern="/${id}/down" class="com.xrsrv.products.ProductService"
+			method="downMajorProductById" verb="POST" />
+		
+		<!-- 批量读入商品图片 -->
+		<route pattern="/write-file" class="com.xrsrv.products.ProductFileService"
+			method="writeProPicIntoDatabase" verb="PUT" />
+		<!-- 上传单个商品图片 -->	
+		<route pattern="/file" class="com.xrsrv.products.ProductFileService"
+			method="create" verb="PUT" />
+		<!-- 查询商品图片 -->
+		<route pattern="/${id}/file" class="com.xrsrv.products.ProductFileService"
+			method="queryProPic" verb="GET" />
+	</module>	
+	
+	<module prefix="/maintenance-worker">
+		<route pattern="" class="com.xrsrv.worker.WorkerService"
+			method="applyMaintenanceWorker" verb="PUT" />
+		<route pattern="/upload" class="com.xrsrv.worker.WorkerService"
+			method="uploadMaintenanceWorker" verb="PUT" />
+		<route pattern="/upload/single" class="com.xrsrv.worker.WorkerService"
+			method="uploadSinglemaintenanceManPic" verb="PUT" />
+		<route pattern="/${id}" class="com.xrsrv.worker.WorkerService"
+			method="updateMaintenanceMan" verb="POST" />
+		<route pattern="/list" class="com.xrsrv.worker.WorkerService"
+			method="queryMaintenanceManList" verb="GET" />
+			<route pattern="/top" class="com.xrsrv.worker.WorkerService"
+			method="queryTopMaintenanceManList" verb="GET" />
+		<route pattern="/list/bg" class="com.xrsrv.worker.WorkerService"
+			method="queryMaintenanceManListForBg" verb="GET" />
+		<route pattern="/${id}" class="com.xrsrv.worker.WorkerService"
+			method="queryMaintenanceManById" verb="GET" />
+		<route pattern="/${id}/del" class="com.xrsrv.worker.WorkerService"
+			method="deleteMaintenanceManById" verb="POST" />
+		<route pattern="/${id}/up" class="com.xrsrv.worker.WorkerService"
+			method="upMaintenanceManById" verb="POST" />
+		<route pattern="/${id}/down" class="com.xrsrv.worker.WorkerService"
+			method="downMaintenanceManById" verb="POST" />
+		
+	</module>
+	
+	<module prefix="/product-order">
+		<route pattern="" class="com.xrsrv.products.OrderService"
+			method="createProductOrder" verb="PUT" />
+		<route pattern="/${id}" class="com.xrsrv.products.OrderService"
+			method="updateProductOrder" verb="POST" />
+		<route pattern="/list" class="com.xrsrv.products.OrderService"
+			method="queryProductOrderList" verb="GET" />
+		<route pattern="/${id}" class="com.xrsrv.products.OrderService"
+			method="queryProductOrderInfoById" verb="GET" />
+		<route pattern="/${id}/del" class="com.xrsrv.products.OrderService"
+			method="deleteProOrderInfoById" verb="POST" />
+		<route pattern="/${id}/down" class="com.xrsrv.products.OrderService"
+			method="downProOrderInfoById" verb="POST" />
+		<route pattern="/${id}/submit" class="com.xrsrv.products.OrderService"
+			method="submitProOrderInfoById" verb="POST" />
+		<route pattern="/${id}/pay" class="com.xrsrv.products.OrderService"
+			method="payProOrderInfoById" verb="POST" />
+			
+	</module>	
+	<!-- 文件相关服务 -->
+	<module prefix="/files">
+		<route pattern="" class="com.xrsrv.file.FileService"
+			method="create" verb="PUT" />
+		<route pattern="/${fileId}/content" class="com.xrsrv.file.FileService"
+			method="upload" verb="POST" />
+		<route pattern="/${fileId}" class="com.xrsrv.file.FileService"
+			method="rename" verb="POST" />
+		<route pattern="/${fileId}" class="com.xrsrv.file.FileService"
+			method="delete" verb="DELETE" />
+		<route pattern="/list" class="com.xrsrv.file.FileService"
+			method="list" verb="GET" template="/debug" />
+		<route pattern="/${fileId}" class="com.xrsrv.file.FileService"
+			method="get" verb="GET">
+			<restrictions>
+				<param name="fileId" value="\d+" />
+				<param name="hash" value="[a-zA-Z0-9+-/=_]+" />
+			</restrictions>
+		</route>
+		<route pattern="/${fileId}/single" class="com.xrsrv.file.DefaultFileServiceImpl"
+			method="get" verb="GET">
+		</route>
+	</module>
+	
+	
+	<!-- 申请服务 -->
+	<module prefix="/major-service">
+		<route pattern="" class="com.xrsrv.services.ApplyService"
+			method="createApplyService" verb="PUT" />
+		<route pattern="/${id}" class="com.xrsrv.services.ApplyService"
+			method="updateApplyService" verb="POST" />
+		<route pattern="/${id}/completed" class="com.xrsrv.services.ApplyService"
+			method="completedService" verb="POST" />
+			<route pattern="/${id}/accept" class="com.xrsrv.services.ApplyService"
+			method="acceptService" verb="POST" />
+		<route pattern="/${id}/submit" class="com.xrsrv.services.ApplyService"
+			method="submitService" verb="POST" />
+		<route pattern="/list" class="com.xrsrv.services.ApplyService"
+			method="queryApplyServiceList" verb="GET" />
+			<route pattern="/top" class="com.xrsrv.services.ApplyService"
+			method="queryTopTenList" verb="GET" />
+		<route pattern="/${id}" class="com.xrsrv.services.ApplyService"
+			method="queryApplyServiceById" verb="GET" />
+			
+		<route pattern="/remark" class="com.xrsrv.services.ApplyService"
+			method="create" verb="PUT" />
+		<route pattern="/${id}/remark" class="com.xrsrv.services.ApplyService"
+			method="update" verb="POST" />
+		<route pattern="/remark/list" class="com.xrsrv.services.ApplyService"
+			method="queryList" verb="GET" />
+		<route pattern="/${id}/remark" class="com.xrsrv.services.ApplyService"
+			method="queryById" verb="GET" />
+			
+		<route pattern="/tracker" class="com.xrsrv.services.ApplyService"
+			method="create" verb="PUT" />
+		<route pattern="/${id}/tracker" class="com.xrsrv.services.ApplyService"
+			method="update" verb="POST" />
+		<route pattern="/tracker/list" class="com.xrsrv.services.ApplyService"
+			method="queryList" verb="GET" />
+		<route pattern="/${id}/tracker" class="com.xrsrv.services.ApplyService"
+			method="queryById" verb="GET" />
+	</module>
+	
+	<module prefix="/info">
+		<route pattern="" class="com.xrsrv.notice.NoticeService"
+			method="createNotice" verb="PUT" template="/debug">
+		</route>
+		<route pattern="/${type}/top" class="com.xrsrv.notice.NoticeService"
+			method="getTopInfoList" verb="GET" template="/debug">
+		</route>
+		<route pattern="/all/bg" class="com.xrsrv.notice.NoticeService"
+			method="getInfoListForBg" verb="GET" template="/debug">
+		</route>
+		<route pattern="/all" class="com.xrsrv.notice.NoticeService"
+			method="getInfoList" verb="GET" template="/debug">
+		</route>
+		<route pattern="/${id}/${hash}" class="com.xrsrv.notice.NoticeService"
+			method="getInfoByIdAndHash" verb="GET" template="/debug">
+		</route>
+		<route pattern="/${type}/${id}/single" class="com.xrsrv.notice.NoticeService"
+			method="getInfoByIdAndType" verb="GET" template="/debug">
+		</route>
+		<route pattern="/${id}/del" class="com.xrsrv.notice.NoticeService"
+			method="deleteNoticeInfoById" verb="POST" />
+			<!-- 从可修改状态，提交到待审核 -->
+			<route pattern="/${id}/submit" class="com.xrsrv.notice.NoticeService"
+			method="submitCmNoticeById" verb="POST" />
+			<!-- 从待审核状态退回到可修改状态 -->
+			<route pattern="/${id}/down" class="com.xrsrv.notice.NoticeService"
+			method="returnCmNoticeById" verb="POST" />
+			<!-- 审核完毕，并发布到线上 -->
+			<route pattern="/${id}/publish" class="com.xrsrv.notice.NoticeService"
+			method="publishCmNoticeById" verb="POST" />
+			<!-- 从线上永久性撤下 -->
+			<route pattern="/${id}/revoke" class="com.xrsrv.notice.NoticeService"
+			method="revokeCmNoticeById" verb="POST" />
+			<route pattern="/${id}" class="com.xrsrv.notice.NoticeService"
+			method="queryNoticeInfoDetail" verb="GET" template="/debug">
+		</route>
+	</module>
+	
+	<module prefix="/security">
+		<route pattern="/captcha-image"
+			class="org.xx.armory.security.impl.SimpleExpressionCaptchaImageProvider"
+			verb="GET" />
+		<route pattern="/signin" class="com.xrsrv.security.AuthorityService"
+			method="signIn" verb="POST" />
+		<route pattern="/user" class="com.xrsrv.security.AuthorityService"
+			method="currentUser" verb="GET" />
+		<route pattern="/change-pwd" class="com.xrsrv.security.AuthorityService"
+			method="changePassword" verb="POST" />
+	</module>
+	<module prefix="/app">
+		<route pattern="/apk-info" class="com.xrsrv.account.AccountService"
+			method="getApkInfo" verb="GET" template="/debug" />
+	</module>
+</root>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../lib/statements.xsd">
+	<module description="my_dict module" name="my_dict">
+		
+		<entity name="my_dict" description="my_dict table">
+			<field name="category_id" type="int" />
+			<field name="key1" type="string" />
+			<field name="value" type="string" />
+			<field name="enabled" type="int" />
+			<field name="parent_key" type="string" />
+			<field name="last_write_time" type="datetime" />
+		</entity>
+		
+		<statement name="get_my_dict" resultType="entities" entityName="my_dict" allowPaging="false">
+			<![CDATA[SELECT category_id ,key1, value,enabled, parent_key, last_write_time FROM my_dict]]>
+		</statement>
+		
+		<statement name="create_my_dict" resultType="updated-count">
+			<![CDATA[INSERT INTO my_dict (category_id ,key1, value,enabled, parent_key, last_write_time)
+		             VALUES(#category_id#, #key1#, #value#, #enabled#, #parent_key#, #last_write_time#)]]>
+			<parameter name="category_id" type="int" />
+			<parameter name="key1" type="string" />
+			<parameter name="value" type="string" />
+			<parameter name="enabled" type="int" />
+			<parameter name="parent_key" type="string" />
+			<parameter name="last_write_time" type="datetime" />
+		</statement>
+		
+		<statement name="update_my_dict" resultType="updated-count">
+			<![CDATA[update my_dict 
+						set enabled = #enabled#
+						where category_id = #category_id#
+						and key1 = #key1#
+
+			]]>
+			<parameter name="category_id" type="int" />
+			<parameter name="key1" type="string" />
+			<parameter name="enabled" type="int" />
+		</statement>
+		
+	</module>
+</root>
