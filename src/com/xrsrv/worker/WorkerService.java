@@ -1,5 +1,6 @@
 package com.xrsrv.worker;
 
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -57,14 +58,21 @@ public class WorkerService extends AggregatedService {
 				.getDao(MaintenanceManDao.class);
 
 		Date date = new Date();
-		long count = maintenanceManDao.createWorkerInfo(mmName, "MC2017",
+		String mmNo = "SJ"+getStrOfYear(date);
+		long count = maintenanceManDao.createWorkerInfo(mmName, mmNo,
 				workerKevelType.strValue(), mobile, intro, 0L,
 				token.getUserId(), date, null, null);
 		long mmId = maintenanceManDao.getLastRowLongId();
-		maintenanceManDao.updateWorkerInfoMmNo(mmId, "MC2017" + mmId);
+		maintenanceManDao.updateWorkerInfoMmNo(mmId, mmNo + mmId);
 		long c1 = userDao.updateMmId(auId, mmId);
 
 		return count > 0 && c1 > 0 ? true : false;
+	}
+
+
+	public String getStrOfYear(Date date){
+		SimpleDateFormat df = new SimpleDateFormat("yyyy");
+		return df.format(date);
 	}
 
 	public boolean uploadMaintenanceWorker(
@@ -88,11 +96,12 @@ public class WorkerService extends AggregatedService {
 				.getDao(MaintenanceManDao.class);
 
 		Date date = new Date();
-		long count = maintenanceManDao.createWorkerInfo(mmName, "MC2017",
+		String mmNo = "SJ"+getStrOfYear(date);
+		long count = maintenanceManDao.createWorkerInfo(mmName, mmNo,
 				workerKevelType.strValue(), mobile, intro, 1L,
 				token.getUserId(), date, null, null);
 		long mmId = maintenanceManDao.getLastRowLongId();
-		maintenanceManDao.updateWorkerInfoMmNo(mmId, "MC2017" + mmId);
+		maintenanceManDao.updateWorkerInfoMmNo(mmId, mmNo + mmId);
 		final FileService fileService = getService(DefaultFileServiceImpl.class);
 
 		long fId = fileService.create(mmId, MAINTENANCE_MAN_FILE_TYPE,
@@ -170,8 +179,7 @@ public class WorkerService extends AggregatedService {
 		MaintenanceManDao maintenanceManDao = super
 				.getDao(MaintenanceManDao.class);
 		Date date = new Date();
-		long count = maintenanceManDao.updateWorkerInfo(mmId, mmName, "MC2017"
-				+ mmId, workerKevelType.strValue(), mobile, intro, 1L,
+		long count = maintenanceManDao.updateWorkerInfo(mmId, mmName, workerKevelType.strValue(), mobile, intro, 1L,
 				token.get("loginName"), date);
 		return count > 0 ? true : false;
 	}

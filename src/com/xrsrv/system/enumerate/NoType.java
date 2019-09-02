@@ -5,10 +5,6 @@ package com.xrsrv.system.enumerate;
 
 import org.json.ValueEnum;
 
-/**
- * @author Haart
- *
- */
 public enum NoType implements ValueEnum {
 	 PRODUCT_NO(1),ORDER_NO(0), SERVICE_NO(2);
 

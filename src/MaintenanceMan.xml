@@ -89,7 +89,6 @@
 			<![CDATA[UPDATE MAINTENANCE_MAN
 					 SET  
 						MM_NAME = #mm_name#,
-					 	MM_NO = #mm_no#, 
 					 	MM_LEVEL=#mm_level#, 
 					 	MM_MOBILE=#mm_mobile#, 
 					 	MM_INTRO=#mm_intro#, 
@@ -100,7 +99,6 @@
 			]]>
 			<parameter name="mm_id" type="int" />
 			<parameter name="mm_name" type="string" />
-			<parameter name="mm_no" type="string" />
 			<parameter name="mm_level" type="string" />
 			<parameter name="mm_mobile" type="string" />
 			<parameter name="mm_intro" type="string" />

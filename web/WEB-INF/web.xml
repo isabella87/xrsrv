@@ -5,17 +5,17 @@
 	
 	<context-param>
 		<param-name>armory.log.dir</param-name>
-		<param-value>C:\tomcat\log\xrsrv</param-value>
+		<param-value>C:\Tomcat 9.0\log\xrsrv</param-value>
 	</context-param>
 
 	<context-param>
 		<param-name>armory.log4j.config</param-name>
-		<param-value>C:\tomcat\etc\xrsrv\log4j.properties</param-value>
+		<param-value>C:\Tomcat 9.0\etc\xrsrv\log4j.properties</param-value>
 	</context-param>
 
 	<context-param>
 		<param-name>armory.proxool.config</param-name>
-		<param-value>C:\tomcat\etc\xrsrv\proxool.properties</param-value>
+		<param-value>C:\Tomcat 9.0\etc\xrsrv\proxool.properties</param-value>
 	</context-param>
 	
 	<listener>
